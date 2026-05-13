@@ -96,7 +96,7 @@ Estas características están fuera del alcance del framework por diseño:
 ### Clonar el repositorio del framework
 
 ```bash
-git clone https://github.com/brauliofm/jb-framework.git jb
+git clone https://github.com/jbflores24/jb-framework.git jb
 cd jb
 composer install
 ```
