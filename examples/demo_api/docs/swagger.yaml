@@ -1,0 +1,137 @@
+openapi: 3.0.3
+info:
+  title: JB API
+  version: 1.0.0
+paths:
+  /clientes:
+    get:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+    post:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+  /clientes/{id}:
+    get:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+    put:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+    delete:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+  /health:
+    get:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+  /productos:
+    get:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+    post:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+  /productos/{id}:
+    get:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+    put:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+    delete:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+  /security/blacklist:
+    get:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+  /security/blacklist/add:
+    post:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+  /security/blacklist/remove:
+    post:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+  /security/blocks:
+    get:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+  /security/blocks/block:
+    post:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+  /security/blocks/unblock:
+    post:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+  /security/dashboard:
+    get:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+  /security/export/csv:
+    get:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+  /security/logs:
+    get:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+  /security/whitelist:
+    get:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+  /security/whitelist/add:
+    post:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK
+  /security/whitelist/remove:
+    post:
+      summary: Generated route
+      responses:
+        "200":
+          description: OK

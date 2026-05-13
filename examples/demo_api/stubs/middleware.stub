@@ -1,0 +1,20 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}}\Middleware;
+
+use Closure;
+use Jb\Core\Request;
+use Jb\Core\Response;
+
+class {{ClassName}}Middleware
+{
+    /**
+     * Handle the request.
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        return $next($request);
+    }
+}
