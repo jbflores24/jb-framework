@@ -15,6 +15,7 @@ class HttpException extends RuntimeException
     public function __construct(
         string $message,
         private readonly int $statusCode = 500,
+        private readonly string $errorCode = 'INTERNAL_ERROR',
         private readonly array $context = [],
         int $code = 0,
         ?Throwable $previous = null
@@ -28,6 +29,14 @@ class HttpException extends RuntimeException
     public function statusCode(): int
     {
         return $this->statusCode;
+    }
+
+    /**
+     * Return the error code for this exception.
+     */
+    public function errorCode(): string
+    {
+        return $this->errorCode;
     }
 
     /**

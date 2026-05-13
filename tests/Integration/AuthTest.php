@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jb\Tests\Integration;
 
 use Jb\Auth\AuthMiddleware;
+use Jb\Auth\AuthService;
 use Jb\Auth\JWT;
 use Jb\Auth\PermissionMiddleware;
 use Jb\Core\HttpException;
@@ -20,14 +21,15 @@ final class AuthTest extends BaseTestCase
         $config->set('auth.jwt_secret', 'secret-test');
 
         $jwt = new JWT('secret-test');
-        $token = $jwt->encode(['sub' => 15, 'permissions' => ['usuarios.read']], 3600);
+        $authService = new AuthService($jwt);
+        $tokens = $authService->generateTokens(['sub' => 15, 'permissions' => ['usuarios.read']]);
 
         $middleware = new AuthMiddleware($config);
         $request = new Request(
             ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/api/perfil'],
             [],
             [],
-            ['authorization' => 'Bearer ' . $token]
+            ['authorization' => 'Bearer ' . $tokens['access_token']]
         );
 
         $response = $middleware->handle($request, static function (Request $request): Response {

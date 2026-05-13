@@ -27,7 +27,33 @@ class Request
         $json = json_decode($raw, true);
         $body = is_array($json) ? $json : $_POST;
 
-        return new self($_SERVER, $_GET, $body, self::detectHeaders());
+        $request = new self($_SERVER, $_GET, $body, self::detectHeaders());
+        // Generate and store a unique trace_id for this request
+        $request->attributes['trace_id'] = self::generateTraceId();
+
+        return $request;
+    }
+
+    /**
+     * Generate a unique trace ID for request tracking and correlation.
+     */
+    private static function generateTraceId(): string
+    {
+        // Format: microtime-randomhex
+        // Example: 1715596123.4567-a1b2c3d4e5f6
+        return sprintf(
+            '%s-%s',
+            str_replace(' ', '-', microtime()),
+            bin2hex(random_bytes(6))
+        );
+    }
+
+    /**
+     * Return the trace ID for this request (used for logging and correlation).
+     */
+    public function traceId(): string
+    {
+        return $this->attributes['trace_id'] ?? 'unknown';
     }
 
     /**

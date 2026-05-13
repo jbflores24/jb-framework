@@ -90,4 +90,49 @@ final class RouterTest extends BaseTestCase
             throw $exception;
         }
     }
+
+    public function testPersistsAndReusesCompiledRouteCache(): void
+    {
+        $cacheFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'jb-router-cache-' . uniqid('', true) . '.json';
+
+        $router = new Router();
+        $router->configureCache(true, $cacheFile);
+        $container = new Container();
+
+        $router->get('/articulos/{slug}', fn (Request $request): array => [
+            'slug' => $request->input('slug'),
+        ]);
+
+        $request = new Request(
+            ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/articulos/hola-mundo'],
+            [],
+            [],
+            []
+        );
+
+        $payload = $this->responsePayload($router->dispatch($request, $container));
+
+        $this->assertSame('hola-mundo', $payload['data']['slug']);
+        $this->assertFileExists($cacheFile);
+        $this->assertSame([
+            'loaded_from_cache' => false,
+            'compiled' => true,
+        ], $router->cacheStatus());
+
+        $secondRouter = new Router();
+        $secondRouter->configureCache(true, $cacheFile);
+        $secondRouter->get('/articulos/{slug}', fn (Request $request): array => [
+            'slug' => $request->input('slug'),
+        ]);
+
+        $secondPayload = $this->responsePayload($secondRouter->dispatch($request, $container));
+
+        $this->assertSame('hola-mundo', $secondPayload['data']['slug']);
+        $this->assertSame([
+            'loaded_from_cache' => true,
+            'compiled' => false,
+        ], $secondRouter->cacheStatus());
+
+        @unlink($cacheFile);
+    }
 }

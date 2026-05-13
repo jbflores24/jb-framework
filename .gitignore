@@ -1,0 +1,3 @@
+# Documentacion de raiz excluida del repositorio, salvo README
+/*.md
+!/README.md

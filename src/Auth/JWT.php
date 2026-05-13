@@ -40,21 +40,21 @@ class JWT
     {
         $segments = explode('.', $token);
         if (count($segments) !== 3) {
-            throw new HttpException('Token invalido.', 401);
+            throw new HttpException('Token inválido.', 401, 'INVALID_TOKEN');
         }
 
         [$header, $payload, $signature] = $segments;
         if (!hash_equals($this->sign($header . '.' . $payload), $signature)) {
-            throw new HttpException('Firma de token invalida.', 401);
+            throw new HttpException('Firma de token inválida.', 401, 'INVALID_SIGNATURE');
         }
 
         $data = json_decode($this->base64UrlDecode($payload), true);
         if (!is_array($data)) {
-            throw new HttpException('Payload de token invalido.', 401);
+            throw new HttpException('Payload de token inválido.', 401, 'INVALID_PAYLOAD');
         }
 
         if (isset($data['exp']) && time() >= (int) $data['exp']) {
-            throw new HttpException('Token expirado.', 401);
+            throw new HttpException('Token expirado.', 401, 'TOKEN_EXPIRED');
         }
 
         return $data;

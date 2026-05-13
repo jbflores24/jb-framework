@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Reporte privado de seguridad
+    url: https://github.com/brauliofm/jb-framework/security
+    about: Usa un canal privado para vulnerabilidades no corregidas.

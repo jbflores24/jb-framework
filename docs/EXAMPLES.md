@@ -204,8 +204,11 @@ curl -s http://127.0.0.1:8000/api/articulos/999
 
 ```json
 {
-    "error": "Not Found",
-    "status": 404
+    "status": "error",
+    "code": "NOT_FOUND",
+    "message": "Artículo no encontrado",
+    "errors": {},
+    "trace_id": "1715596123.4567-a1b2c3d4e5f6"
 }
 ```
 
@@ -213,36 +216,165 @@ curl -s http://127.0.0.1:8000/api/articulos/999
 
 ## 6. Autenticación con JWT
 
-### Obtener token
+### 6.1 Obtener token (Login)
+
+Credenciales de prueba:
+- Email: `admin@example.com` · Contraseña: `password123`
+- Email: `user@example.com` · Contraseña: `password456`
 
 ```bash
 curl -s -X POST http://127.0.0.1:8000/api/auth/login \
      -H "Content-Type: application/json" \
-     -d '{"email": "admin@ejemplo.com", "password": "secreto"}'
+     -d '{
+       "email": "admin@example.com",
+       "password": "password123"
+     }'
 ```
 
-**Respuesta esperada:**
+**Respuesta esperada (201):**
 
 ```json
 {
-    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+  "status": "success",
+  "message": "Autenticación exitosa",
+  "data": {
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiYWNjZXNzIiwic3ViIjoxLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicGVybWlzc2lvbnMiOlsidXN1YXJpb3MucmVhZCIsInVzdWFyaW9zLmNyZWF0ZSIsInVzdWFyaW9zLnVwZGF0ZSIsInVzdWFyaW9zLmRlbGV0ZSJdLCJpYXQiOjE3MTU1OTYxMjMsImV4cCI6MTcxNTU5OTcyM30.abcdefg...",
+    "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoicmVmcmVzaCIsInN1YiI6MSwiaWF0IjoxNzE1NTk2MTIzLCJleHAiOjE3MTgxODgxMjN9.hijklmno...",
     "expires_in": 3600
+  },
+  "meta": {
+    "user_id": 1,
+    "email": "admin@example.com"
+  }
 }
 ```
 
-### Usar el token en una ruta protegida
+**Errores posibles:**
+
+Credenciales inválidas (401):
+```json
+{
+  "status": "error",
+  "code": "INVALID_CREDENTIALS",
+  "message": "Credenciales inválidas",
+  "errors": {},
+  "trace_id": "1715596125.1234-a1b2c3d4e5f6"
+}
+```
+
+Validación fallida (422):
+```json
+{
+  "status": "error",
+  "code": "VALIDATION_ERROR",
+  "message": "Validación fallida",
+  "errors": {
+    "email": ["Email inválido"],
+    "password": ["Mínimo 8 caracteres"]
+  },
+  "trace_id": "1715596125.5678-b2c3d4e5f6a7"
+}
+```
+
+### 6.2 Usar token en rutas protegidas
+
+Con el `access_token` obtenido, acceder a endpoints protegidos:
 
 ```bash
-curl -s http://127.0.0.1:8000/api/articulos \
+curl -s http://127.0.0.1:8000/api/usuarios \
      -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
 ```
 
-### Token inválido o expirado
+**Respuesta esperada (200):**
 
 ```json
 {
-    "error": "Unauthorized",
-    "status": 401
+  "status": "success",
+  "message": "OK",
+  "data": {
+    "usuarios": [
+      {
+        "id": 1,
+        "email": "admin@example.com",
+        "permissions": ["usuarios.read", "usuarios.create", "usuarios.update", "usuarios.delete"]
+      }
+    ]
+  },
+  "meta": {}
+}
+```
+
+**Errores posibles:**
+
+Token no proporcionado (401):
+```json
+{
+  "status": "error",
+  "code": "MISSING_TOKEN",
+  "message": "Token de autenticación requerido.",
+  "errors": {},
+  "trace_id": "1715596126.7890-c3d4e5f6a7b8"
+}
+```
+
+Token expirado (401):
+```json
+{
+  "status": "error",
+  "code": "TOKEN_EXPIRED",
+  "message": "Token expirado.",
+  "errors": {},
+  "trace_id": "1715596127.0123-d4e5f6a7b8c9"
+}
+```
+
+Token inválido (401):
+```json
+{
+  "status": "error",
+  "code": "INVALID_SIGNATURE",
+  "message": "Firma de token inválida.",
+  "errors": {},
+  "trace_id": "1715596128.3456-e5f6a7b8c9d0"
+}
+```
+
+### 6.3 Renovar token (Refresh)
+
+Cuando el `access_token` está por expirar, usar el `refresh_token` para obtener uno nuevo:
+
+```bash
+curl -s -X POST http://127.0.0.1:8000/api/auth/refresh \
+     -H "Content-Type: application/json" \
+     -d '{
+       "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+     }'
+```
+
+**Respuesta esperada (200):**
+
+```json
+{
+  "status": "success",
+  "message": "Token renovado",
+  "data": {
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiYWNjZXNzIiwic3ViIjoxLCJyZWZyZXNoZWRfYXQiOjE3MTU1OTYyMDB9.newtoken...",
+    "expires_in": 3600
+  },
+  "meta": {}
+}
+```
+
+**Errores posibles:**
+
+Refresh token inválido (401):
+```json
+{
+  "status": "error",
+  "code": "INVALID_REFRESH_TOKEN",
+  "message": "Refresh token inválido.",
+  "errors": {},
+  "trace_id": "1715596129.5678-f6a7b8c9d0e1"
 }
 ```
 
@@ -262,11 +394,14 @@ curl -s -X POST http://127.0.0.1:8000/api/articulos \
 
 ```json
 {
+    "status": "error",
+    "code": "VALIDATION_ERROR",
+    "message": "Validación fallida",
     "errors": {
         "titulo": ["El campo titulo es obligatorio."],
         "contenido": ["El campo contenido es obligatorio."]
     },
-    "status": 422
+    "trace_id": "1715596125.6789-c3d4e5f6a7b8"
 }
 ```
 
@@ -278,8 +413,11 @@ Cuando una IP supera el límite de peticiones configurado:
 
 ```json
 {
-    "error": "Too Many Requests",
-    "status": 429
+    "status": "error",
+    "code": "TOO_MANY_REQUESTS",
+    "message": "Has superado el límite de peticiones",
+    "errors": {},
+    "trace_id": "1715596126.7890-d4e5f6a7b8c9"
 }
 ```
 

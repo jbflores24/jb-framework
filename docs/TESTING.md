@@ -18,12 +18,16 @@ composer test
 ```
 PHPUnit 11.x.x
 
-........................
+...............................
 
-Time: 00:00.215, Memory: 12.00 MB
+Time: 00:00.213, Memory: 10.00 MB
 
-OK (24 tests, 62 assertions)
+OK (31 tests, 74 assertions)
 ```
+
+**Cobertura actual:**
+- 11 tests unitarios (Config, JWT, QueryBuilder, Request, Response, Router, Validator, SecurityConfiguration)
+- 7 tests de integración (Auth, Database, Migration, SecurityHeaders)
 
 ### Ejecutar solo pruebas unitarias
 

@@ -80,7 +80,8 @@ return [
 
 **Notas:**
 
-- `jwt_secret` debe ser una cadena aleatoria larga (mínimo 32 caracteres). Cambiarla invalida todos los tokens existentes.
+- `jwt_secret` debe ser una cadena aleatoria larga (mínimo 32 caracteres en producción). Cambiarla invalida todos los tokens existentes.
+- El framework falla en bootstrap si `APP_ENV=production` y `JWT_SECRET` es `change-me` o tiene menos de 32 caracteres.
 - `jwt_ttl` es el tiempo de vida del token de acceso en segundos. Por defecto 1 hora.
 - `jwt_refresh_ttl` es el tiempo de vida del token de refresco. Por defecto 14 días.
 
@@ -89,6 +90,8 @@ return [
 ```bash
 php -r "echo bin2hex(random_bytes(32));"
 ```
+
+**Ver también:** [Checklist de seguridad en DEPLOYMENT.md](DEPLOYMENT.md)
 
 ---
 

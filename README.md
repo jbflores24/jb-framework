@@ -1,6 +1,10 @@
 # JB Framework
 
-Framework PHP 8.2 minimalista para el desarrollo de APIs REST. Orientado a proyectos donde se prioriza el control total del código, la seguridad y la simplicidad operativa sobre la conveniencia de frameworks de propósito general.
+[![Tests](https://github.com/brauliofm/jb-framework/actions/workflows/tests.yml/badge.svg)](https://github.com/brauliofm/jb-framework/actions/workflows/tests.yml)
+[![Coverage Objetivo](https://img.shields.io/badge/coverage_objetivo-75%25-blue)](docs/TESTING.md)
+[![Version](https://img.shields.io/badge/version-beta-orange)](docs/leeme_segunda_etapa.md)
+
+Framework PHP 8.2 orientado al desarrollo de APIs REST. Está pensado para proyectos donde se priorizan la claridad del código, la seguridad por defecto y una base ligera frente a frameworks de propósito general.
 
 **Autor:** José Braulio Flores Martínez  
 **Licencia:** MIT  
@@ -96,7 +100,7 @@ Estas características están fuera del alcance del framework por diseño:
 ### Clonar el repositorio del framework
 
 ```bash
-git clone https://github.com/jbflores24/jb-framework.git jb
+git clone https://github.com/brauliofm/jb-framework.git jb
 cd jb
 composer install
 ```
@@ -110,8 +114,10 @@ composer test
 Resultado esperado:
 
 ```
-OK (24 tests, 62 assertions)
+OK, but there were issues!
 ```
+
+La verificación correcta es que la suite finalice sin fallos.
 
 ---
 
@@ -123,7 +129,7 @@ cd mi_api
 composer install
 ```
 
-Levantar servidor de desarrollo:
+Levantar el servidor de desarrollo:
 
 ```bash
 php jb serve
@@ -138,7 +144,7 @@ php jb migrate
 php jb seed Producto
 ```
 
-Esto crea el controlador, modelo, migración, seeder, rutas REST y pruebas automáticamente.
+El comando genera controlador, modelo, migración, seeder, rutas REST y pruebas base para el recurso.
 
 ---
 
@@ -173,22 +179,29 @@ mi_api/
 
 ## Documentación
 
+Portada interna recomendada: [docs/INDEX.md](docs/INDEX.md)
+
 | Archivo | Contenido |
 |---|---|
+| [docs/INDEX.md](docs/INDEX.md) | Portada interna e índice de la documentación |
 | [docs/QUICKSTART.md](docs/QUICKSTART.md) | De cero a API funcional paso a paso |
 | [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) | Estructura completa con descripción de cada componente |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Arquitectura interna, capas y flujo HTTP |
 | [docs/CLI_REFERENCE.md](docs/CLI_REFERENCE.md) | Referencia completa de comandos CLI |
-| [docs/EXAMPLES.md](docs/EXAMPLES.md) | Ejemplos de uso con salidas esperadas |
 | [docs/CONFIGURATION.md](docs/CONFIGURATION.md) | Configuración detallada de cada módulo |
+| [docs/EXAMPLES.md](docs/EXAMPLES.md) | Ejemplos de uso con salidas esperadas |
 | [docs/TESTING.md](docs/TESTING.md) | Guía de pruebas: ejecución y escritura |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Convenciones y flujo para contribuir |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | **Despliegue en producción con checklist de seguridad** |
+| [docs/PERFORMANCE.md](docs/PERFORMANCE.md) | **Estrategia de cache de rutas, benchmarks y hotspots de performance** |
+| [docs/ROADMAP.md](docs/ROADMAP.md) | Resumen de roadmap y prioridades actuales |
+| [docs/COMMUNITY.md](docs/COMMUNITY.md) | Colaboración, seguridad y gobernanza pública |
+| [docs/leeme_segunda_etapa.md](docs/leeme_segunda_etapa.md) | Estatus actual del proyecto y etapas completadas |
 
 ---
 
 ## Proyecto de ejemplo
 
-El directorio `examples/demo_api/` contiene un proyecto generado con el CLI y configurado con SQLite, tres recursos scaffoldeados (Ping, Cliente, Producto) y pruebas listas para ejecutar.
+El directorio `examples/demo_api/` contiene un proyecto generado con el CLI, configurado con SQLite y preparado como referencia funcional mínima.
 
 ```bash
 cd examples/demo_api
@@ -196,9 +209,5 @@ composer install
 php jb migrate
 php jb test
 ```
-
----
-
-## Licencia
 
 MIT — libre para uso personal y comercial.

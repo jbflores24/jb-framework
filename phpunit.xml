@@ -11,6 +11,9 @@
     </php>
 
     <testsuites>
+        <testsuite name="Benchmark">
+            <directory>tests/Benchmark</directory>
+        </testsuite>
         <testsuite name="Unit">
             <directory>tests/Unit</directory>
         </testsuite>
