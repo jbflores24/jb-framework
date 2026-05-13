@@ -26,6 +26,16 @@ Portada interna de la documentación técnica del framework.
 - [Comunidad y seguridad](COMMUNITY.md)
 - [Estatus actual](leeme_segunda_etapa.md)
 
+## Arquitectura avanzada
+
+- [Visión general de arquitectura](architecture/overview.md)
+- [Decisiones de arquitectura (ADR)](adr/0001-json-first-http-surface.md)
+- [Diagramas conceptuales](diagrams/conceptual-flows.md)
+- [Módulos del framework](modules/core.md)
+- [Ciclos de vida](lifecycle/http-lifecycle.md)
+- [Metodología de benchmark](benchmarks/methodology.md)
+- [Capacidades actuales vs plan](roadmap/current-capabilities.md)
+
 ## Recomendación de lectura
 
 Si es la primera vez que trabajas con el framework:

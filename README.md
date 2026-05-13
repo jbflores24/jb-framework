@@ -197,6 +197,16 @@ Portada interna recomendada: [docs/INDEX.md](docs/INDEX.md)
 | [docs/COMMUNITY.md](docs/COMMUNITY.md) | Colaboración, seguridad y gobernanza pública |
 | [docs/leeme_segunda_etapa.md](docs/leeme_segunda_etapa.md) | Estatus actual del proyecto y etapas completadas |
 
+Arquitectura avanzada (nuevo):
+
+- [docs/architecture/overview.md](docs/architecture/overview.md)
+- [docs/adr/README.md](docs/adr/README.md)
+- [docs/diagrams/conceptual-flows.md](docs/diagrams/conceptual-flows.md)
+- [docs/modules/README.md](docs/modules/README.md)
+- [docs/lifecycle/README.md](docs/lifecycle/README.md)
+- [docs/benchmarks/README.md](docs/benchmarks/README.md)
+- [docs/roadmap/README.md](docs/roadmap/README.md)
+
 ---
 
 ## Proyecto de ejemplo
