@@ -26,10 +26,29 @@ class LoggingTest extends TestCase {
 
     protected function tearDown(): void {
         $this->logger->flush();
-        array_map('unlink', glob("$this->tempDir/*") ?: []);
-        array_map('unlink', glob("$this->alertsDir/*") ?: []);
-        @rmdir($this->alertsDir);
-        @rmdir($this->tempDir);
+        $this->removePath($this->tempDir);
+    }
+
+    private function removePath(string $path): void {
+        if (!file_exists($path)) {
+            return;
+        }
+
+        if (is_file($path) || is_link($path)) {
+            @unlink($path);
+
+            return;
+        }
+
+        foreach (scandir($path) ?: [] as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
+
+            $this->removePath($path . '/' . $item);
+        }
+
+        @rmdir($path);
     }
 
     public function test_log_access_creates_entry(): void {
