@@ -1,6 +1,6 @@
 # JB Framework
 
-[![Tests](https://github.com/brauliofm/jb-framework/actions/workflows/tests.yml/badge.svg)](https://github.com/brauliofm/jb-framework/actions/workflows/tests.yml)
+[![Tests](https://github.com/jbflores24/jb-framework/actions/workflows/tests.yml/badge.svg)](https://github.com/jbflores24/jb-framework/actions/workflows/tests.yml)
 [![Coverage Objetivo](https://img.shields.io/badge/coverage_objetivo-75%25-blue)](docs/TESTING.md)
 [![Version](https://img.shields.io/badge/version-beta-orange)](docs/leeme_segunda_etapa.md)
 
@@ -100,7 +100,7 @@ Estas características están fuera del alcance del framework por diseño:
 ### Clonar el repositorio del framework
 
 ```bash
-git clone https://github.com/brauliofm/jb-framework.git jb
+git clone https://github.com/jbflores24/jb-framework.git jb
 cd jb
 composer install
 ```

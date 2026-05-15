@@ -17,3 +17,10 @@
 /test.txt
 /tests/warning_detail.txt
 /examples/**/test_ejemplo.txt
+
+# Almacenamiento y cobertura
+storage/logs/*
+storage/cache/*
+storage/rate_limit/*
+coverage/
+*.sqlite
