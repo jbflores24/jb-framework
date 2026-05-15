@@ -53,9 +53,8 @@ class ProjectBuilder
             'minimum-stability' => 'dev',
             'prefer-stable' => true,
             'repositories' => [[
-                'type' => 'path',
-                'url' => $this->relativePath($target, $this->frameworkPath),
-                'options' => ['symlink' => true],
+                'type' => 'vcs',
+                'url' => 'https://github.com/jbflores24/jb-framework.git',
             ]],
             'autoload' => ['psr-4' => ['App\\' => 'app/']],
             'autoload-dev' => ['psr-4' => ['Tests\\' => 'tests/']],
@@ -93,26 +92,28 @@ class ProjectBuilder
         return trim($slug, '-');
     }
 
-    private function relativePath(string $from, string $to): string
-    {
-        $from = str_replace('\\', '/', realpath($from) ?: $from);
-        $to = str_replace('\\', '/', realpath($to) ?: $to);
-        $fromParts = explode('/', trim($from, '/'));
-        $toParts = explode('/', trim($to, '/'));
-
-        while ($fromParts !== [] && $toParts !== [] && $fromParts[0] === $toParts[0]) {
-            array_shift($fromParts);
-            array_shift($toParts);
-        }
-
-        return str_repeat('../', count($fromParts)) . implode('/', $toParts);
-    }
-
     private function launcher(): string
     {
-        $bin = str_replace('\\', '/', $this->frameworkPath . '/bin/jb');
+        return <<<'PHP'
+#!/usr/bin/env php
+<?php
 
-        return "#!/usr/bin/env php\n<?php\n\ndeclare(strict_types=1);\n\nchdir(__DIR__);\nrequire '$bin';\n";
+declare(strict_types=1);
+
+chdir(__DIR__);
+
+$autoload = __DIR__ . '/vendor/autoload.php';
+$frameworkPath = __DIR__ . '/vendor/jb/framework';
+
+if (!is_file($autoload) || !is_dir($frameworkPath)) {
+    fwrite(STDERR, "Dependencias no instaladas. Ejecuta: composer install\n");
+    exit(1);
+}
+
+require $autoload;
+
+exit((new Jb\Console\ConsoleApplication(__DIR__, $frameworkPath))->run($argv));
+PHP;
     }
 
     private function phpunitXml(): string
