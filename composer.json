@@ -13,7 +13,12 @@
     "autoload": {
         "psr-4": {
             "Jb\\": "src/"
-        }
+        },
+        "exclude-from-classmap": [
+            "/tests/",
+            "/examples/",
+            "/docs/"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -27,6 +32,16 @@
         "test": "phpunit",
         "test-unit": "phpunit --testsuite Unit",
         "test-integration": "phpunit --testsuite Integration"
+    },
+    "archive": {
+        "exclude": [
+            "/.github/",
+            "/.phpunit.cache/",
+            "/examples/",
+            "/tests/",
+            "/arbol.txt",
+            "/test.txt"
+        ]
     },
     "config": {
         "sort-packages": true

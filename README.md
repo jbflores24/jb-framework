@@ -211,13 +211,14 @@ Arquitectura avanzada (nuevo):
 
 ## Proyecto de ejemplo
 
-El directorio `examples/demo_api/` contiene un proyecto generado con el CLI, configurado con SQLite y preparado como referencia funcional mínima.
+El directorio `examples/demo_api/` contiene un ejemplo ligero de estructura (`app/`, `routes/`, `public/`) para referencia.
+
+Para crear un proyecto ejecutable usa el CLI desde la raiz del framework:
 
 ```bash
-cd examples/demo_api
+php bin/jb new mi_api
+cd mi_api
 composer install
-php jb migrate
-php jb test
 ```
 
 MIT — libre para uso personal y comercial.

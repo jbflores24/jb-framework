@@ -1,7 +1,0 @@
-#!/usr/bin/env php
-<?php
-
-declare(strict_types=1);
-
-chdir(__DIR__);
-require 'C:/wamp64/www/jb/bin/jb';
