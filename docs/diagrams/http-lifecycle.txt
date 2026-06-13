@@ -1,0 +1,19 @@
+Request
+  |
+  v
+public/index.php
+  |
+  v
+Application::bootstrap
+  |
+  v
+Router::dispatch
+  |
+  v
+Middleware(s)
+  |
+  v
+Controller/Handler
+  |
+  v
+Response::send (JSON)

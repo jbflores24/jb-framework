@@ -1,0 +1,19 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}}\Controllers;
+
+use Jb\Core\Request;
+use Jb\Core\Response;
+
+class {{ClassName}}Controller
+{
+    /**
+     * List resources.
+     */
+    public function index(Request $request): Response
+    {
+        return Response::success([]);
+    }
+}

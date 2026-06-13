@@ -1,0 +1,49 @@
+{
+    "name": "jb/framework",
+    "description": "Miniframework PHP 8.2 para APIs REST.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.2",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jb\\": "src/"
+        },
+        "exclude-from-classmap": [
+            "/tests/",
+            "/examples/",
+            "/docs/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Jb\\Tests\\": "tests/"
+        }
+    },
+    "bin": [
+        "bin/jb"
+    ],
+    "scripts": {
+        "test": "phpunit",
+        "test-unit": "phpunit --testsuite Unit",
+        "test-integration": "phpunit --testsuite Integration"
+    },
+    "archive": {
+        "exclude": [
+            "/.github/",
+            "/.phpunit.cache/",
+            "/examples/",
+            "/tests/",
+            "/arbol.txt",
+            "/test.txt"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

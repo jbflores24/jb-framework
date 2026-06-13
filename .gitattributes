@@ -1,0 +1,8 @@
+# Excluir archivos no necesarios en dist exportadas (Packagist/Composer)
+/.github export-ignore
+/.phpunit.cache export-ignore
+/tests export-ignore
+/examples export-ignore
+/arbol.txt export-ignore
+/test.txt export-ignore
+/tests/warning_detail.txt export-ignore

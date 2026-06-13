@@ -1,0 +1,26 @@
+# Documentacion de raiz excluida del repositorio, salvo README
+/*.md
+!/README.md
+
+# Dependencias
+/vendor/
+/examples/**/vendor/
+
+# Entorno y caches de pruebas
+/.env
+/.phpunit.cache/
+/.phpunit.result.cache
+/examples/**/.phpunit.result.cache
+
+# Artefactos temporales
+/arbol.txt
+/test.txt
+/tests/warning_detail.txt
+/examples/**/test_ejemplo.txt
+
+# Almacenamiento y cobertura
+storage/logs/*
+storage/cache/*
+storage/rate_limit/*
+coverage/
+*.sqlite
