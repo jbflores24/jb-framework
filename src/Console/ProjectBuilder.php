@@ -8,9 +8,7 @@ use RuntimeException;
 
 class ProjectBuilder
 {
-    public function __construct(private readonly string $frameworkPath)
-    {
-    }
+    public function __construct(private readonly string $frameworkPath) {}
 
     /**
      * Create a new JB API project.
@@ -64,12 +62,15 @@ class ProjectBuilder
         file_put_contents($target . '/phpunit.xml', $this->phpunitXml());
         file_put_contents($target . '/.gitignore', "/vendor\n/.env\n/storage/logs/*\n/storage/cache/*\n/storage/rate_limit/*\n");
         file_put_contents($target . '/jb', $this->launcher());
+        if (!is_dir($target . '/tests')) {
+            mkdir($target . '/tests', 0775, true);
+        }
         file_put_contents($target . '/tests/BaseTestCase.php', "<?php\n\ndeclare(strict_types=1);\n\nnamespace Tests;\n\nuse PHPUnit\\Framework\\TestCase;\n\nabstract class BaseTestCase extends TestCase\n{\n}\n");
     }
 
     private function composerPackageName(string $name): string
     {
-        $parts = array_values(array_filter(explode('/', str_replace('\\\\', '/', strtolower($name))), static fn (string $part): bool => $part !== ''));
+        $parts = array_values(array_filter(explode('/', str_replace('\\\\', '/', strtolower($name))), static fn(string $part): bool => $part !== ''));
 
         $vendor = $this->composerSlug($parts[0] ?? 'jb');
         $package = $this->composerSlug($parts[count($parts) - 1] ?? 'api');
