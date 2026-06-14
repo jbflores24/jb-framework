@@ -50,7 +50,7 @@ Responsabilidad: bootstrap, enrutamiento, resolucion de dependencias y normaliza
 - Auth
 - Security
 - Logging
-- RateLimit/Rate
+- RateLimit
 - Validation
 - Cache
 - Mail

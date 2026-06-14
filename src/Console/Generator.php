@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Jb\Console;
 
+use Jb\Database\Connection;
+
 class Generator
 {
     public function __construct(private readonly string $cwd, private readonly string $frameworkPath)
@@ -17,7 +19,7 @@ class Generator
     {
         match ($command) {
             'make:controller' => $this->file('controller.stub', "app/Controllers/{$name}Controller.php", $name),
-            'make:model' => $this->file('model.stub', "app/Models/$name.php", $name),
+            'make:model' => $this->makeModel($name),
             'make:migration' => $this->migration($name),
             'make:seeder' => $this->file('seeder.stub', "database/seeders/{$name}Seeder.php", $name),
             'make:middleware' => $this->file('middleware.stub', "app/Middleware/{$name}Middleware.php", $name),
@@ -120,6 +122,104 @@ class Generator
     {
         $line = date('c') . ' scaffold ' . $this->className($name) . PHP_EOL;
         $this->appendOnce('storage/logs/audit_scaffold.log', 'scaffold ' . $this->className($name), $line);
+    }
+
+    private function makeModel(string $table): void
+    {
+        $connection = Connection::getInstance();
+        $pdo = $connection->pdo();
+        $driver = $connection->driver();
+
+        // Query column metadata from information_schema.
+        if ($driver === 'mysql') {
+            $sql = 'SELECT COLUMN_NAME, DATA_TYPE, COLUMN_TYPE, IS_NULLABLE, COLUMN_DEFAULT
+                    FROM information_schema.COLUMNS
+                    WHERE TABLE_NAME = :table AND TABLE_SCHEMA = DATABASE()
+                    ORDER BY ORDINAL_POSITION';
+        } elseif ($driver === 'pgsql') {
+            $sql = "SELECT COLUMN_NAME, DATA_TYPE,
+                           CONCAT(DATA_TYPE, '(', COALESCE(CHARACTER_MAXIMUM_LENGTH::text, ''), ')') AS COLUMN_TYPE,
+                           IS_NULLABLE, COLUMN_DEFAULT
+                    FROM information_schema.COLUMNS
+                    WHERE TABLE_NAME = :table AND TABLE_SCHEMA = CURRENT_SCHEMA()
+                    ORDER BY ORDINAL_POSITION";
+        } else {
+            throw new \RuntimeException('make:model solo soporta MySQL y PostgreSQL.');
+        }
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['table' => $table]);
+        $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        if ($columns === []) {
+            throw new \RuntimeException("No se encontraron columnas para la tabla '{$table}'.");
+        }
+
+        $className = $this->singularize($table);
+        $properties = '';
+
+        foreach ($columns as $col) {
+            $phpType = $this->mapPhpType((string) $col['DATA_TYPE'], (string) ($col['COLUMN_TYPE'] ?? ''));
+            $nullable = strtoupper((string) $col['IS_NULLABLE']) === 'YES' ? '|null' : '';
+            $properties .= " * @property {$phpType}{$nullable} \${$col['COLUMN_NAME']}\n";
+        }
+
+        $content = "<?php\n\n";
+        $content .= "declare(strict_types=1);\n\n";
+        $content .= "namespace App\\Repositories;\n\n";
+        $content .= "use Jb\\Database\\BaseRepository;\n";
+        $content .= "use Jb\\Database\\Connection;\n\n";
+        $content .= "/**\n";
+        $content .= " * Repository for table `{$table}`.\n";
+        $content .= " *\n";
+        $content .= $properties;
+        $content .= " */\n";
+        $content .= "class {$className}Repository extends BaseRepository\n";
+        $content .= "{\n";
+        $content .= "    public function __construct(Connection \$connection)\n";
+        $content .= "    {\n";
+        $content .= "        parent::__construct(\$connection, '{$table}');\n";
+        $content .= "    }\n";
+        $content .= "}\n";
+
+        $this->write("app/Repositories/{$className}Repository.php", $content);
+    }
+
+    /**
+     * Map a SQL data type to its PHP equivalent.
+     */
+    private function mapPhpType(string $dataType, string $columnType): string
+    {
+        // tinyint(1) is commonly used as boolean.
+        if (str_contains(strtolower($columnType), 'tinyint(1)')) {
+            return 'bool';
+        }
+
+        return match (strtoupper($dataType)) {
+            'INT', 'INTEGER', 'TINYINT', 'SMALLINT', 'MEDIUMINT', 'BIGINT' => 'int',
+            'VARCHAR', 'CHAR', 'TEXT', 'TINYTEXT', 'MEDIUMTEXT', 'LONGTEXT', 'ENUM', 'SET' => 'string',
+            'DECIMAL', 'FLOAT', 'DOUBLE', 'REAL', 'NUMERIC' => 'float',
+            'DATE', 'DATETIME', 'TIMESTAMP', 'TIME', 'YEAR' => 'string',
+            'JSON', 'JSONB' => 'array',
+            default => 'string',
+        };
+    }
+
+    /**
+     * Turn a table name into its singular PascalCase class name.
+     *
+     * Example: "estudiantes" -> "Estudiante", "alumno_cursos" -> "AlumnoCurso"
+     */
+    private function singularize(string $table): string
+    {
+        // Simple heuristic: strip trailing 's' / 'es'.
+        $singular = match (true) {
+            str_ends_with(strtolower($table), 'es') => substr($table, 0, -2),
+            str_ends_with(strtolower($table), 's') => substr($table, 0, -1),
+            default => $table,
+        };
+
+        return $this->className($singular);
     }
 
     private function write(string $relative, string $content): void

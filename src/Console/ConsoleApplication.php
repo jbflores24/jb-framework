@@ -68,9 +68,29 @@ class ConsoleApplication
         }
 
         (new Generator($this->cwd, $this->frameworkPath))->make($command, $name);
-        $this->line("$command [$name] generado.");
+
+        if ($command === 'make:model') {
+            $this->line('Repositorio ' . $this->singularize($name) . 'Repository creado en app/Repositories/');
+        } else {
+            $this->line("$command [$name] generado.");
+        }
 
         return 0;
+    }
+
+    /**
+     * Singularize a table name to its PascalCase class name.
+     * Example: "estudiantes" -> "Estudiante", "alumno_cursos" -> "AlumnoCurso"
+     */
+    private function singularize(string $name): string
+    {
+        $singular = match (true) {
+            str_ends_with(strtolower($name), 'es') => substr($name, 0, -2),
+            str_ends_with(strtolower($name), 's') => substr($name, 0, -1),
+            default => $name,
+        };
+
+        return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $singular)));
     }
 
     private function publishStubs(): int

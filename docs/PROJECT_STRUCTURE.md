@@ -33,7 +33,8 @@ jb/
 │   ├── Database/
 │   │   ├── Connection.php      ← singleton PDO multi-driver
 │   │   ├── QueryBuilder.php    ← construcción fluida de consultas SQL
-│   │   ├── BaseRepository.php  ← CRUD base para repositorios
+│   │   ├── BaseRepository.php  ← CRUD base y carga de relaciones
+│   │   ├── Collection.php      ← envoltura de arreglos con métodos funcionales
 │   │   ├── Blueprint.php       ← definición de columnas en migraciones
 │   │   ├── ColumnDefinition.php ← fluent API de columnas
 │   │   ├── Migration.php       ← contrato base de migración
@@ -122,7 +123,8 @@ Cuando se ejecuta `php bin/jb new nombre_proyecto`, se crea la siguiente estruct
 nombre_proyecto/
 ├── app/
 │   ├── Controllers/            ← controladores de la API
-│   └── Models/                 ← modelos de entidades
+│   ├── Models/                 ← modelos de entidades
+│   └── Repositories/           ← repositorios generados con make:model
 ├── database/
 │   ├── migrations/             ← archivos de migración con timestamp
 │   └── seeders/                ← seeders de datos

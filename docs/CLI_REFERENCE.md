@@ -100,14 +100,20 @@ php jb make:controller Cliente
 
 Genera un controlador vacío con los métodos `index`, `show`, `store`, `update` y `destroy`.
 
-### `make:model <Nombre>`
+### `make:model <NombreTabla>`
 
 ```bash
-php jb make:model Cliente
-# → app/Models/Cliente.php
+php jb make:model estudiantes
+# → app/Repositories/EstudianteRepository.php
 ```
 
-Genera un modelo que extiende `BaseRepository` con la tabla y campos configurables.
+Se conecta a la base de datos, consulta `information_schema.COLUMNS` y genera un repositorio que extiende `BaseRepository` con:
+
+- Constructor que asigna la tabla y la conexión automáticamente.
+- PHPDoc `@property` por cada columna detectada, con el tipo PHP correspondiente (`int`, `string`, `float`, `bool` según el tipo SQL).
+- La clase se nombra en PascalCase singular (ej: `estudiantes` → `EstudianteRepository`).
+
+Solo soporta MySQL y PostgreSQL.
 
 ### `make:migration <Nombre>`
 
