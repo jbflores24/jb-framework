@@ -111,4 +111,12 @@ class Response
     {
         return $this->payload;
     }
+
+    /**
+     * Return the HTTP status code of this response.
+     */
+    public function status(): int
+    {
+        return $this->status;
+    }
 }

@@ -53,9 +53,10 @@ class SecurityMiddleware
             return $next($request);
         }
 
+        $securityRequest = SecurityRequest::fromRequest($request);
+
         try {
             $this->cleanup->run();
-            $securityRequest = SecurityRequest::fromRequest($request);
             $preflight = $this->manager->preflight($securityRequest);
 
             if (($preflight['allow'] ?? false) === true) {
@@ -63,7 +64,7 @@ class SecurityMiddleware
             }
 
             if (($preflight['blocked'] ?? false) === true) {
-                throw new HttpException('Acceso bloqueado.', 403, ['code' => 'SEC_BLOCKED']);
+                throw new HttpException('Acceso bloqueado.', 403, 'SEC_BLOCKED', ['reason' => $securityRequest->ip]);
             }
 
             foreach ($this->detectors as $detector) {
@@ -75,7 +76,7 @@ class SecurityMiddleware
                 $learning = (bool) $this->config->get('learning_mode', false);
                 $this->manager->recordThreat($securityRequest, $result, !$learning);
                 if (!$learning) {
-                    throw new HttpException('Acceso bloqueado.', 403, ['code' => 'SEC_BLOCKED']);
+                    throw new HttpException('Acceso bloqueado.', 403, 'SEC_BLOCKED', ['reason' => $securityRequest->ip]);
                 }
             }
         } catch (HttpException $exception) {
@@ -84,9 +85,45 @@ class SecurityMiddleware
             if (!(bool) $this->config->get('fail_open', true)) {
                 throw new HttpException('Modulo de seguridad no disponible.', 503);
             }
+
+            return $next($request);
         }
 
-        return $next($request);
+        // --- Post-response phase: detectors that depend on the controller result ---
+        try {
+            $response = $next($request);
+            $statusCode = $response->status();
+        } catch (HttpException $exception) {
+            $this->runPostResponseDetectors($securityRequest, $exception->statusCode());
+
+            throw $exception;
+        }
+
+        $this->runPostResponseDetectors($securityRequest, $statusCode);
+
+        return $response;
+    }
+
+    /**
+     * Run post-response detectors (e.g. failed login, 404 scanning) and
+     * persist threats. Never throws: this runs after the response is ready
+     * and must not break the request/response cycle.
+     */
+    private function runPostResponseDetectors(SecurityRequest $securityRequest, int $statusCode): void
+    {
+        try {
+            foreach ($this->detectors as $detector) {
+                $result = $detector->analyzeResponse($securityRequest, $statusCode, $this->config);
+                if (($result['blocked'] ?? false) !== true) {
+                    continue;
+                }
+
+                $learning = (bool) $this->config->get('learning_mode', false);
+                $this->manager->recordThreat($securityRequest, $result, !$learning);
+            }
+        } catch (\Throwable) {
+            // Post-response analysis must never affect an already-generated response.
+        }
     }
 
     private function isExcluded(Request $request): bool

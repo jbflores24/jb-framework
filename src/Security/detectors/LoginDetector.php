@@ -15,11 +15,24 @@ class LoginDetector extends AbstractDetector
     }
 
     /**
-     * Detect repeated failed login signals sent by auth controllers.
+     * Pre-request analysis: nothing to check before the controller runs.
      */
     public function analyze(SecurityRequest $request, SecurityConfig $config): array
     {
-        if (!str_contains($request->path, 'login') || ($request->body['failed'] ?? false) !== true) {
+        return $this->pass();
+    }
+
+    /**
+     * Post-response analysis: detect repeated failed login attempts (401/403)
+     * on endpoints whose path contains "login".
+     */
+    public function analyzeResponse(SecurityRequest $request, int $statusCode, SecurityConfig $config): array
+    {
+        if ($request->method !== 'POST' || !str_contains($request->path, 'login')) {
+            return $this->pass();
+        }
+
+        if ($statusCode !== 401 && $statusCode !== 403) {
             return $this->pass();
         }
 

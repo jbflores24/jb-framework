@@ -41,6 +41,7 @@ class RateLimitMiddleware
             throw new HttpException(
                 'Too many requests. Please try again later.',
                 429,
+                'RATE_LIMIT_EXCEEDED',
                 ['retry_after' => $result['resetAt'] - time()]
             );
         }

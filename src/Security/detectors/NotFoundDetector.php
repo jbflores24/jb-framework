@@ -15,11 +15,20 @@ class NotFoundDetector extends AbstractDetector
     }
 
     /**
-     * Detect repeated not-found probes when controllers mark the request.
+     * Pre-request analysis: nothing to check before the controller runs.
      */
     public function analyze(SecurityRequest $request, SecurityConfig $config): array
     {
-        if (($request->body['_security_status'] ?? null) !== 404) {
+        return $this->pass();
+    }
+
+    /**
+     * Post-response analysis: detect repeated 404 responses (path scanning)
+     * for the same IP.
+     */
+    public function analyzeResponse(SecurityRequest $request, int $statusCode, SecurityConfig $config): array
+    {
+        if ($statusCode !== 404) {
             return $this->pass();
         }
 
