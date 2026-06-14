@@ -21,7 +21,7 @@ class RateLimitDetector extends AbstractDetector
     {
         $window = (int) $config->get('rate_window_seconds', 60);
         $max = (int) $config->get('rate_max_requests', 120);
-        $hits = $this->scores->hit($request->ip, $request->fingerprint, $window);
+        $hits = $this->scores->hit($request->ip, $request->ip, $request->fingerprint, $window);
 
         return $hits > $max ? $this->block('rate_limit_exceeded', 50, 'medium') : $this->pass();
     }

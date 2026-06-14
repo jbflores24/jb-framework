@@ -23,7 +23,7 @@ class LoginDetector extends AbstractDetector
             return $this->pass();
         }
 
-        $hits = $this->scores->hit('login:' . $request->ip, $request->fingerprint, 900);
+        $hits = $this->scores->hit('login:' . $request->ip, $request->ip, $request->fingerprint, 900);
 
         return $hits >= (int) $config->get('login_max_failed', 5)
             ? $this->block('login_bruteforce', 75, 'high')

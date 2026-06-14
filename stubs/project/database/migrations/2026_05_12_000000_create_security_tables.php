@@ -39,8 +39,13 @@ return new class (Connection::getInstance()) extends Migration {
             $table->id();
             $table->string('score_key', 190);
             $table->string('fingerprint', 128);
+            $table->string('ip', 45);
+            $table->timestamp('window_start');
             $table->integer('attempts')->default(1);
             $table->timestamp('expires_at');
+            $table->timestamp('updated_at')->nullable();
+            $table->unique(['ip', 'window_start'], 'uq_ip_window');
+            $table->unique(['fingerprint', 'window_start'], 'uq_fingerprint_window');
         });
 
         $this->create('security_whitelist', function (Blueprint $table): void {

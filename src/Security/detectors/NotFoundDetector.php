@@ -23,7 +23,7 @@ class NotFoundDetector extends AbstractDetector
             return $this->pass();
         }
 
-        $hits = $this->scores->hit('404:' . $request->ip, $request->fingerprint, 300);
+        $hits = $this->scores->hit('404:' . $request->ip, $request->ip, $request->fingerprint, 300);
 
         return $hits > (int) $config->get('not_found_max', 30)
             ? $this->block('not_found_scanning', 45, 'medium')

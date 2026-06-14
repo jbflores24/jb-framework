@@ -12,6 +12,9 @@ class Blueprint
     /** @var list<string> */
     private array $unique = [];
 
+    /** @var list<array{columns: list<string>, name: string}> */
+    private array $compoundUnique = [];
+
     public function __construct(private readonly string $driver)
     {
     }
@@ -78,6 +81,16 @@ class Blueprint
     }
 
     /**
+     * Declare a compound UNIQUE constraint across multiple columns.
+     *
+     * @param list<string> $columns
+     */
+    public function unique(array $columns, string $name): void
+    {
+        $this->compoundUnique[] = ['columns' => $columns, 'name' => $name];
+    }
+
+    /**
      * Compile columns into SQL fragments.
      *
      * @return list<string>
@@ -88,6 +101,11 @@ class Blueprint
 
         foreach ($this->unique as $column) {
             $columns[] = 'UNIQUE (' . $this->wrap($column) . ')';
+        }
+
+        foreach ($this->compoundUnique as $constraint) {
+            $wrapped = implode(', ', array_map(fn (string $col): string => $this->wrap($col), $constraint['columns']));
+            $columns[] = 'CONSTRAINT ' . $this->wrap($constraint['name']) . ' UNIQUE (' . $wrapped . ')';
         }
 
         return $columns;
