@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}}\Services;
+
+use Jb\Services\BaseService;
+use Jb\Services\ServiceResult;
+
+class {{ClassName}}Service extends BaseService
+{
+    /**
+     * Ejemplo de operación de dominio.
+     *
+     * @param array<string, mixed> $data
+     */
+    public function ejecutar(array $data): ServiceResult
+    {
+        return $this->transaction(function () use ($data): ServiceResult {
+            // TODO: lógica de negocio aquí
+
+            return $this->ok('Operación completada', $data);
+        });
+    }
+}

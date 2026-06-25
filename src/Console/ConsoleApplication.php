@@ -31,7 +31,7 @@ class ConsoleApplication
                 'serve' => $this->passthru('php -S 127.0.0.1:8000 -t public'),
                 'env' => $this->env(),
                 'make:controller', 'make:model', 'make:migration', 'make:seeder',
-                'make:middleware', 'make:test', 'make:crud', 'make:scaffold' => $this->make($command, $argument),
+                'make:middleware', 'make:test', 'make:service', 'make:crud', 'make:scaffold' => $this->make($command, $argument),
                 'stub:publish' => $this->publishStubs(),
                 'migrate' => $this->migrate('run'),
                 'migrate:rollback' => $this->migrate('rollback'),
@@ -71,6 +71,8 @@ class ConsoleApplication
 
         if ($command === 'make:model') {
             $this->line('Repositorio ' . $this->singularize($name) . 'Repository creado en app/Repositories/');
+        } elseif ($command === 'make:service') {
+            $this->line("Servicio {$name}Service creado en app/Services/");
         } else {
             $this->line("$command [$name] generado.");
         }
@@ -309,7 +311,7 @@ class ConsoleApplication
     private function help(): int
     {
         $this->line('JB Framework CLI');
-        $this->line('Comandos: new, serve, env, make:*, stub:publish, migrate, seed, cache:clear, logs:clear, test, docs:generate');
+        $this->line('Comandos: new, serve, env, make:controller|model|migration|seeder|middleware|test|service|crud|scaffold, stub:publish, migrate, seed, cache:clear, logs:clear, test, docs:generate');
 
         return 0;
     }

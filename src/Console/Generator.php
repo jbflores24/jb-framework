@@ -24,6 +24,7 @@ class Generator
             'make:seeder' => $this->file('seeder.stub', "database/seeders/{$name}Seeder.php", $name),
             'make:middleware' => $this->file('middleware.stub', "app/Middleware/{$name}Middleware.php", $name),
             'make:test' => $this->file('test.stub', "tests/Unit/{$name}Test.php", $name),
+            'make:service' => $this->file('service.stub', "app/Services/{$name}Service.php", $name),
             'make:crud' => $this->crud($name),
             'make:scaffold' => $this->scaffold($name),
             default => null,
