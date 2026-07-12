@@ -111,7 +111,7 @@ class BaseRepository
      * @param 'one'|'many' $type
      * @return list<array<string, mixed>>
      */
-    protected function eagerLoad(
+    public function eagerLoad(
         array $rows,
         string $relatedTable,
         string $localKey,

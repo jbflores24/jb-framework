@@ -15,6 +15,9 @@ class Blueprint
     /** @var list<array{columns: list<string>, name: string}> */
     private array $compoundUnique = [];
 
+    /** @var list<ForeignKeyDefinition> */
+    private array $foreignKeys = [];
+
     public function __construct(private readonly string $driver)
     {
     }
@@ -45,6 +48,38 @@ class Blueprint
     public function integer(string $name): ColumnDefinition
     {
         return $this->column($name, 'INTEGER');
+    }
+
+    /**
+     * Add a big integer column.
+     */
+    public function bigInteger(string $name): ColumnDefinition
+    {
+        return $this->column($name, 'BIGINT');
+    }
+
+    /**
+     * Add an unsigned big integer column.
+     */
+    public function unsignedBigInteger(string $name): ColumnDefinition
+    {
+        return $this->column($name, 'BIGINT UNSIGNED');
+    }
+
+    /**
+     * Add a decimal column.
+     */
+    public function decimal(string $name, int $precision = 8, int $scale = 2): ColumnDefinition
+    {
+        return $this->column($name, "DECIMAL($precision, $scale)");
+    }
+
+    /**
+     * Add a float/double column.
+     */
+    public function float(string $name): ColumnDefinition
+    {
+        return $this->column($name, 'DOUBLE');
     }
 
     /**
@@ -108,7 +143,22 @@ class Blueprint
             $columns[] = 'CONSTRAINT ' . $this->wrap($constraint['name']) . ' UNIQUE (' . $wrapped . ')';
         }
 
+        foreach ($this->foreignKeys as $fk) {
+            $columns[] = $fk->toSql();
+        }
+
         return $columns;
+    }
+
+    /**
+     * Add a foreign key constraint.
+     */
+    public function foreign(string $column): ForeignKeyDefinition
+    {
+        $fk = new ForeignKeyDefinition($column, $this->driver);
+        $this->foreignKeys[] = $fk;
+
+        return $fk;
     }
 
     private function column(string $name, string $type, bool $primary = false): ColumnDefinition
@@ -123,6 +173,73 @@ class Blueprint
 
     private function wrap(string $identifier): string
     {
-        return '"' . str_replace('"', '""', $identifier) . '"';
+        return $this->driver === 'mysql'
+            ? '`' . str_replace('`', '``', $identifier) . '`'
+            : '"' . str_replace('"', '""', $identifier) . '"';
+    }
+}
+
+class ForeignKeyDefinition
+{
+    private string $references = '';
+
+    private string $onTable = '';
+
+    private ?string $onDelete = null;
+
+    private ?string $onUpdate = null;
+
+    public function __construct(
+        private readonly string $column,
+        private readonly string $driver
+    ) {
+    }
+
+    public function references(string $column): self
+    {
+        $this->references = $column;
+
+        return $this;
+    }
+
+    public function on(string $table): self
+    {
+        $this->onTable = $table;
+
+        return $this;
+    }
+
+    public function onDelete(string $action): self
+    {
+        $this->onDelete = $action;
+
+        return $this;
+    }
+
+    public function onUpdate(string $action): self
+    {
+        $this->onUpdate = $action;
+
+        return $this;
+    }
+
+    public function toSql(): string
+    {
+        $sql = 'FOREIGN KEY (' . $this->wrap($this->column) . ') REFERENCES ' . $this->wrap($this->onTable) . '(' . $this->wrap($this->references) . ')';
+        if ($this->onDelete !== null) {
+            $sql .= ' ON DELETE ' . strtoupper($this->onDelete);
+        }
+        if ($this->onUpdate !== null) {
+            $sql .= ' ON UPDATE ' . strtoupper($this->onUpdate);
+        }
+
+        return $sql;
+    }
+
+    private function wrap(string $identifier): string
+    {
+        return $this->driver === 'mysql'
+            ? '`' . str_replace('`', '``', $identifier) . '`'
+            : '"' . str_replace('"', '""', $identifier) . '"';
     }
 }

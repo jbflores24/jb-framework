@@ -34,14 +34,54 @@ class QueryBuilder
      */
     public function where(string $column, mixed $operator, mixed $value = null): self
     {
-        if ($value === null) {
+        if ($value === null && !in_array(strtoupper((string)$operator), ['IS', 'IS NOT', 'IS NULL', 'IS NOT NULL'], true)) {
             $value = $operator;
             $operator = '=';
+        }
+
+        $op = strtoupper((string)$operator);
+
+        if ($value === null || in_array($op, ['IS NULL', 'IS NOT NULL'], true)) {
+            if ($op === '=') {
+                $op = 'IS NULL';
+            } elseif ($op === '!=') {
+                $op = 'IS NOT NULL';
+            }
+            $this->wheres[] = $this->wrap($column) . " " . $op;
+            return $this;
+        }
+
+        if (in_array($op, ['IS', 'IS NOT'], true) && $value === null) {
+            $op = $op . ' NULL';
+            $this->wheres[] = $this->wrap($column) . " " . $op;
+            return $this;
         }
 
         $placeholder = ':w_' . count($this->bindings);
         $this->wheres[] = $this->wrap($column) . " $operator $placeholder";
         $this->bindings[$placeholder] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Add a WHERE IN clause.
+     */
+    public function whereIn(string $column, array $values): self
+    {
+        if (empty($values)) {
+            $this->wheres[] = '0 = 1';
+            return $this;
+        }
+
+        $placeholders = [];
+        foreach ($values as $index => $val) {
+            $placeholder = ':wi_' . count($this->bindings) . '_' . $index;
+            $placeholders[] = $placeholder;
+            $this->bindings[$placeholder] = $val;
+        }
+
+        $this->wheres[] = $this->wrap($column) . ' IN (' . implode(', ', $placeholders) . ')';
 
         return $this;
     }

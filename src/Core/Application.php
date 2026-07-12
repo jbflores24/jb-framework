@@ -82,23 +82,31 @@ class Application
                 ? $this->container->get(SecurityMiddleware::class)->handle($request, $handler)
                 : $handler($request);
             $response->send();
+        } catch (\App\Exceptions\ValidationException $exception) {
+            (new Response([
+                'message' => $exception->getMessage(),
+                'statusCode' => 422,
+                'error' => true,
+                'data' => $exception->errors()
+            ], 422))->send();
         } catch (HttpException $exception) {
-            Response::error(
-                $exception->getMessage(),
-                $exception->statusCode(),
-                $exception->context(),
-                $exception->errorCode(),
-                $request->traceId()
-            )->send();
+            (new Response([
+                'message' => $exception->getMessage(),
+                'statusCode' => $exception->statusCode(),
+                'error' => true,
+                'data' => $exception->context()
+            ], $exception->statusCode()))->send();
         } catch (Throwable $exception) {
-            $payload = $this->config->isDebug() ? ['exception' => $exception->getMessage()] : [];
-            Response::error(
-                'Error interno del servidor.',
-                500,
-                $payload,
-                'INTERNAL_ERROR',
-                $request->traceId()
-            )->send();
+            $payload = $this->config->isDebug() ? [
+                'exception' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString()
+            ] : [];
+            (new Response([
+                'message' => 'Error interno del servidor.',
+                'statusCode' => 500,
+                'error' => true,
+                'data' => $payload
+            ], 500))->send();
         }
     }
 
@@ -163,26 +171,7 @@ class Application
 
     private function handleCors(Request $request): void
     {
-        $origin = $request->header('origin', '');
-        $allowed = (string) $this->config->get('app.cors.allowed_origins', '*');
-        $env = (string) $this->config->get('app.env', 'production');
-
-        if ($allowed === '*') {
-            // Wildcard permitido solo en desarrollo
-            if ($env === 'production') {
-                error_log('[SECURITY] CORS wildcard rechazado en producción');
-                header('Access-Control-Allow-Origin: ');
-            } else {
-                header('Access-Control-Allow-Origin: *');
-            }
-        } elseif ($origin !== '' && in_array($origin, array_map('trim', explode(',', $allowed)), true)) {
-            header('Access-Control-Allow-Origin: ' . $origin);
-            header('Access-Control-Allow-Credentials: true');
-        }
-
-        header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
-        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-        header('Access-Control-Max-Age: 3600');
+        // CORS is handled exclusively by Apache .htaccess to prevent duplicate headers in XAMPP
     }
 
     private function stripBaseRoute(Request $request): Request
