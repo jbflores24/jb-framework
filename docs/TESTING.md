@@ -1,96 +1,59 @@
-# Guía de pruebas
+# Testing Guide
 
-JB Framework incluye su propia suite de pruebas con PHPUnit 11 y un mecanismo para que los proyectos generados incluyan sus propias pruebas desde el primer día.
+JB Framework includes a PHPUnit 11 test suite for the framework itself and also generates test files for scaffolded projects.
 
----
-
-## Pruebas del framework
-
-### Ejecutar toda la suite
+## Run the suite
 
 ```bash
-cd jb/
 composer test
 ```
 
-**Salida esperada:**
+The current repository suite finishes with:
 
-```
-PHPUnit 11.x.x
-
-...............................
-
-Time: 00:00.213, Memory: 10.00 MB
-
-OK (31 tests, 74 assertions)
+```bash
+OK (13 tests, 29 assertions)
 ```
 
-**Cobertura actual:**
-- 11 tests unitarios (Config, JWT, QueryBuilder, Request, Response, Router, Validator, SecurityConfiguration)
-- 7 tests de integración (Auth, Database, Migration, SecurityHeaders)
-
-### Ejecutar solo pruebas unitarias
+To run only a subset:
 
 ```bash
 composer test-unit
-```
-
-### Ejecutar solo pruebas de integración
-
-```bash
 composer test-integration
 ```
 
----
+## Test layout
 
-## Organización de las pruebas del framework
-
-```
+```text
 tests/
-├── BaseTestCase.php            ← clase base con helpers comunes
-├── Unit/
-│   ├── ConfigTest.php          ← lectura y acceso con punto
-│   ├── JWTTest.php             ← generación, validación y expiración
-│   ├── QueryBuilderTest.php    ← construcción de queries SQL
-│   ├── RequestTest.php         ← parsing de método, URL y body
-│   ├── ResponseTest.php        ← serialización JSON y códigos HTTP
-│   ├── RouterTest.php          ← registro y resolución de rutas
-│   └── ValidatorTest.php       ← reglas de validación y mensajes
-└── Integration/
-    ├── AuthTest.php            ← flujo completo JWT en middleware
-    ├── DatabaseTest.php        ← operaciones CRUD con SQLite en memoria
-    └── MigrationTest.php       ← ejecución y rollback de migraciones
+|-- BaseTestCase.php
+|-- Benchmark/
+|-- Integration/
+`-- Unit/
 ```
 
-Las pruebas de integración usan **SQLite en memoria** (`:memory:`). No requieren ninguna base de datos externa instalada.
+The `Benchmark/` directory is reserved for benchmark checks.
 
----
+## Base test case
 
-## `BaseTestCase`
+`tests/BaseTestCase.php` is a shared base class for framework tests. It currently extends `PHPUnit\Framework\TestCase` and does not add extra helpers yet.
 
-La clase base proporciona helpers para las pruebas:
+## Current coverage
 
-```php
-// Crear un directorio temporal (se limpia automáticamente en tearDown)
-$path = $this->createTempPath('prefijo-');
+The suite currently covers the main framework areas, including:
 
-// Escribir un archivo en el path temporal
-$this->writeFile($path . '/config/app.php', '<?php return [];');
+- Core HTTP objects
+- Configuration
+- Database and repositories
+- Authentication and JWT
+- Routing
+- Validation
+- Security and bootstrap checks
 
-// Construir una instancia de Config con valores inyectados
-$config = $this->makeConfig($basePath, app: ['debug' => true], database: ['driver' => 'sqlite']);
-```
+## Writing tests
 
----
+Use one responsibility per test and keep the assertions focused.
 
-## Escribir pruebas en proyectos generados
-
-Cuando se usa `make:scaffold Recurso`, se generan automáticamente:
-
-- `tests/Unit/RecursoTest.php`
-- `tests/Integration/RecursoIntegrationTest.php`
-
-### Estructura de una prueba unitaria generada
+Example unit test:
 
 ```php
 <?php
@@ -99,18 +62,18 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
+use Jb\Tests\BaseTestCase;
 
-class ProductoTest extends TestCase
+class ExampleTest extends BaseTestCase
 {
-    public function test_instancia_correcta(): void
+    public function test_example(): void
     {
-        $this->assertTrue(true); // reemplazar con assertions reales
+        $this->assertTrue(true);
     }
 }
 ```
 
-### Estructura de una prueba de integración generada
+Example integration test with SQLite in memory:
 
 ```php
 <?php
@@ -119,97 +82,40 @@ declare(strict_types=1);
 
 namespace Tests\Integration;
 
-use PHPUnit\Framework\TestCase;
-use Jb\Database\Connection;
+use Jb\Tests\BaseTestCase;
 
-class ProductoIntegrationTest extends TestCase
+class ExampleIntegrationTest extends BaseTestCase
 {
-    private \PDO $pdo;
-
-    protected function setUp(): void
+    public function test_database_ready(): void
     {
-        // base de datos SQLite en memoria para pruebas aisladas
-        $this->pdo = new \PDO('sqlite::memory:');
-        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->pdo->exec('CREATE TABLE productos (id INTEGER PRIMARY KEY, nombre TEXT)');
-    }
+        $pdo = new \PDO('sqlite::memory:');
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-    public function test_insertar_producto(): void
-    {
-        $this->pdo->exec("INSERT INTO productos (nombre) VALUES ('Café')");
-        $stmt = $this->pdo->query('SELECT COUNT(*) FROM productos');
-        $this->assertSame(1, (int)$stmt->fetchColumn());
+        $this->assertInstanceOf(\PDO::class, $pdo);
     }
 }
 ```
 
----
+## Scaffolded projects
 
-## Configuración PHPUnit (`phpunit.xml`)
+When you run `make:scaffold <Name>`, the generated project includes:
 
-```xml
-<phpunit bootstrap="vendor/autoload.php" colors="true">
-    <testsuites>
-        <testsuite name="Unit">
-            <directory>tests/Unit</directory>
-        </testsuite>
-        <testsuite name="Integration">
-            <directory>tests/Integration</directory>
-        </testsuite>
-    </testsuites>
-</phpunit>
-```
+- `tests/Unit/<Name>UnitTest.php`
+- `tests/Integration/<Name>ScaffoldTest.php`
 
-Las suites permiten ejecutar solo un tipo de prueba cuando se necesita rapidez:
+## PHPUnit configuration
 
-```bash
-php vendor/bin/phpunit --testsuite Unit
-php vendor/bin/phpunit --testsuite Integration
-```
+The repository uses `phpunit.xml` with these suites:
 
----
+- `Unit`
+- `Integration`
+- `Benchmark`
 
-## Convenciones para pruebas
+The integration suite uses SQLite in memory (`:memory:`) by default, so it does not require an external database server.
 
-- Nombre de método: `test_{qué_se_prueba}` en snake_case.
-- Una sola responsabilidad por prueba.
-- No usar bases de datos externas en pruebas unitarias.
-- Usar SQLite en memoria para pruebas de integración que requieren base de datos.
-- Limpiar estado global entre pruebas (setUp / tearDown).
-- No hacer pruebas contra servicios externos (correo, APIs de terceros) en la suite principal.
+## Good practices
 
----
-
-## Pruebas en el proyecto de ejemplo
-
-```bash
-cd examples/demo_api
-php jb test
-# OK (3 tests, 3 assertions)
-```
-
-El proyecto de ejemplo incluye un test de humo (Ping) y las pruebas generadas por `make:scaffold`.
-
----
-
-## Agregar una prueba de integración con migración real
-
-```php
-protected function setUp(): void
-{
-    $pdo = new \PDO('sqlite::memory:');
-    Connection::setInstance($pdo);
-
-    $migrator = new Migrator($config);
-    $migrator->run();
-}
-
-public function test_crear_y_recuperar_recurso(): void
-{
-    $repo = new ProductoRepository($config);
-    $id   = $repo->insert(['nombre' => 'Mesa', 'precio' => 250]);
-    $item = $repo->find($id);
-
-    $this->assertSame('Mesa', $item['nombre']);
-}
-```
+- Keep unit tests isolated.
+- Use SQLite in memory for integration tests when possible.
+- Clean shared state in `tearDown()` when a test changes global configuration.
+- Avoid external services in the main suite.
