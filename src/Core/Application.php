@@ -144,6 +144,16 @@ class Application
             throw new HttpException('JWT_SECRET en producción debe tener al menos 32 caracteres.', 500);
         }
 
+        // En producción, csrf_secret debe ser fuerte (no default) si CSRF está habilitado
+        $csrfEnabled = (bool) $this->config->get('security.csrf_enabled', false);
+        $csrfSecret = (string) $this->config->get('security.csrf_secret', 'change-me');
+        if ($env === 'production' && $csrfEnabled && $csrfSecret === 'change-me') {
+            throw new HttpException(
+                'csrf_secret debe configurarse con un valor seguro en producción. Genera uno con: php -r "echo bin2hex(random_bytes(32));"',
+                500
+            );
+        }
+
         // Advertencia si CORS wildcard en producción
         $corsOrigins = (string) $this->config->get('app.cors.allowed_origins', '*');
         if ($env === 'production' && $corsOrigins === '*') {
@@ -209,7 +219,7 @@ class Application
 
     private function path(string $path): string
     {
-        if (preg_match('#^[A-Za-z]:[\\\\/]#', $path) === 1 || str_starts_with($path, '/')) {
+        if (preg_match('#^[A-Za-z]:[\\/]#', $path) === 1 || str_starts_with($path, '/')) {
             return $path;
         }
 

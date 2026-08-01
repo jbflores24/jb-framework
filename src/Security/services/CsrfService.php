@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace Jb\Security\services;
 
+use Jb\Cache\CacheInterface;
 use Jb\Security\config\SecurityConfig;
 
 class CsrfService
 {
-    public function __construct(private readonly SecurityConfig $config)
-    {
+    private const TTL_SECONDS = 1800; // 30 minutos
+
+    public function __construct(
+        private readonly SecurityConfig $config,
+        private readonly CacheInterface $cache,
+    ) {
     }
 
     /**
@@ -21,18 +26,42 @@ class CsrfService
     }
 
     /**
-     * Generate a deterministic CSRF token for a user id.
+     * Generate a random, single-use CSRF token bound to a user id and store it server-side.
      */
     public function token(int|string $userId): string
     {
-        return hash_hmac('sha256', (string) $userId, (string) $this->config->get('csrf_secret', 'change-me'));
+        $token = bin2hex(random_bytes(32));
+        $this->cache->put($this->cacheKey($userId), $token, self::TTL_SECONDS);
+
+        return $token;
     }
 
     /**
-     * Validate a provided CSRF token.
+     * Validate a provided CSRF token. On success, the token is invalidated immediately
+     * (single use) to prevent replay.
      */
     public function valid(int|string $userId, ?string $token): bool
     {
-        return !$this->enabled() || ($token !== null && hash_equals($this->token($userId), $token));
+        if (!$this->enabled()) {
+            return true;
+        }
+
+        if ($token === null) {
+            return false;
+        }
+
+        $stored = $this->cache->get($this->cacheKey($userId));
+        $isValid = is_string($stored) && hash_equals($stored, $token);
+
+        if ($isValid) {
+            $this->cache->forget($this->cacheKey($userId));
+        }
+
+        return $isValid;
+    }
+
+    private function cacheKey(int|string $userId): string
+    {
+        return 'csrf:' . $userId;
     }
 }
