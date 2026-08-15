@@ -1,4 +1,4 @@
-# Modulo Security
+# Módulo Security
 
 ## Proposito
 
@@ -16,7 +16,7 @@ Detectar patrones de riesgo y reforzar seguridad operacional en runtime.
 - SecurityMiddleware
 - SecurityManager
 - ScoringEngine
-- detectores en src/Security/detectors
+- detectores en `src/Security/detectors`
 - SecurityAdminController
 
 ## Dependencias
@@ -27,7 +27,7 @@ Detectar patrones de riesgo y reforzar seguridad operacional en runtime.
 
 ## Flujo interno
 
-Request -> SecurityMiddleware -> SecurityManager -> detectores -> scoring -> allow o block -> log/auditoria.
+`Request` -> `SecurityMiddleware` -> `SecurityManager` -> detectores -> scoring -> allow o block -> log/auditoría.
 
 ## Extensibilidad
 

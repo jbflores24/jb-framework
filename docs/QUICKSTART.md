@@ -1,6 +1,6 @@
-# Quickstart
+# Inicio rápido
 
-Esta guia lleva de cero a una API REST funcional con JB Framework.
+Esta guía lleva de cero a una API REST funcional con JB Framework.
 
 ## 1. Instalar el framework
 
@@ -19,7 +19,7 @@ cd mi_api
 composer install
 ```
 
-El comando crea la estructura base, copia `.env.example` a `.env` y deja un launcher local llamado `jb`.
+El comando crea la estructura base, copia `.env.example` a `.env` y deja un lanzador local llamado `jb`.
 
 ## 3. Revisar la configuracion
 
@@ -27,7 +27,7 @@ El comando crea la estructura base, copia `.env.example` a `.env` y deja un laun
 php jb env
 ```
 
-Este comando muestra valores utiles de `app`, `database` y `security`.
+Este comando muestra valores útiles de `app`, `database` y `security`.
 
 ## 4. Generar un recurso completo
 
@@ -37,16 +37,16 @@ php jb make:scaffold Producto
 
 El scaffold crea estos archivos:
 
-| Archivo | Descripcion |
+| Archivo | Descripción |
 |---|---|
 | `app/Controllers/ProductoController.php` | Controlador REST |
 | `app/Models/Producto.php` | Modelo del recurso |
 | `database/migrations/{timestamp}_create_productos_table.php` | Migracion |
 | `database/seeders/ProductoSeeder.php` | Seeder |
 | `tests/Unit/ProductoUnitTest.php` | Prueba unitaria |
-| `tests/Integration/ProductoScaffoldTest.php` | Prueba de integracion |
+| `tests/Integration/ProductoScaffoldTest.php` | Prueba de integración |
 
-Tambien registra las rutas REST en `routes/api.php` y agrega una entrada de auditoria de scaffold.
+También registra las rutas REST en `routes/api.php` y agrega una entrada de auditoría de scaffold.
 
 ## 5. Ejecutar migraciones y seeders
 
@@ -90,6 +90,6 @@ php jb make:service Cliente
 
 ## Siguiente lectura
 
-- [CLI reference](CLI_REFERENCE.md)
-- [Configuration](CONFIGURATION.md)
-- [Testing](TESTING.md)
+- [Referencia CLI](CLI_REFERENCE.md)
+- [Configuración](CONFIGURATION.md)
+- [Pruebas](TESTING.md)

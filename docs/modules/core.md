@@ -2,7 +2,7 @@
 
 ## Proposito
 
-Orquestar bootstrap, enrutamiento, ciclo de request/response y resolucion de dependencias.
+Orquestar el arranque, el enrutamiento, el ciclo solicitud/respuesta y la resolución de dependencias.
 
 ## Responsabilidades
 
@@ -23,7 +23,7 @@ Orquestar bootstrap, enrutamiento, ciclo de request/response y resolucion de dep
 
 ## Dependencias
 
-Core depende de componentes transversales para registrar bindings en bootstrap.
+Core depende de componentes transversales para registrar bindings durante el arranque.
 
 ## Flujo interno
 

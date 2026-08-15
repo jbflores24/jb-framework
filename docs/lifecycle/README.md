@@ -1,8 +1,8 @@
-# Lifecycle Index
+# Índice de ciclos de vida
 
-- [HTTP lifecycle](http-lifecycle.md)
-- [CLI lifecycle](cli-lifecycle.md)
-- [Request lifecycle](request-lifecycle.md)
-- [Middleware lifecycle](middleware-lifecycle.md)
-- [Bootstrapping](bootstrapping.md)
-- [ServiceProvider lifecycle (planeado)](service-provider-lifecycle.md)
+- [Ciclo de vida HTTP](http-lifecycle.md)
+- [Ciclo de vida CLI](cli-lifecycle.md)
+- [Ciclo de vida de la solicitud](request-lifecycle.md)
+- [Ciclo de vida de middlewares](middleware-lifecycle.md)
+- [Arranque](bootstrapping.md)
+- [Ciclo de vida de ServiceProvider (planeado)](service-provider-lifecycle.md)

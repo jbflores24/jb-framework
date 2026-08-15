@@ -36,7 +36,7 @@ jb/
 │   │   ├── BaseRepository.php  ← CRUD base y carga de relaciones
 │   │   ├── Collection.php      ← envoltura de arreglos con métodos funcionales
 │   │   ├── Blueprint.php       ← definición de columnas en migraciones
-│   │   ├── ColumnDefinition.php ← fluent API de columnas
+│   │   ├── ColumnDefinition.php ← API fluida de columnas
 │   │   ├── Migration.php       ← contrato base de migración
 │   │   ├── Migrator.php        ← ejecución y registro de migraciones
 │   │   └── Seeder.php          ← contrato base de seeder
@@ -141,7 +141,7 @@ nombre_proyecto/
 │   ├── logging.php             ← nivel y ruta de logs
 │   ├── mail.php                ← SMTP y remitente
 │   ├── rate_limit.php          ← ventana y límite de peticiones
-│   └── security.php            ← umbales del módulo de seguridad
+│   └── security.php            ← umbrales del módulo de seguridad
 ├── storage/
 │   ├── cache/                  ← archivos de caché
 │   └── logs/                   ← archivos de log

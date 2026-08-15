@@ -15,7 +15,7 @@
 - Etapa 5: logging distribuido.
 - Etapa 6: revocación segura de tokens.
 - Etapa 7 complementaria: auditoría avanzada de sesiones revocadas.
-- Etapa 7 oficial: performance y escalabilidad.
+- Etapa 7 oficial: rendimiento y escalabilidad.
 - Etapa 8: gobernanza y comunidad.
 
 ## Estado de la suite

@@ -1,4 +1,4 @@
-# ServiceProvider lifecycle
+# Ciclo de vida de ServiceProvider
 
 ## Estado
 
@@ -20,4 +20,4 @@ Definir lifecycle estandar:
 2. boot
 3. optional terminate
 
-Con esto se busca modularizar bootstrap y facilitar extensiones de terceros.
+Con esto se busca modularizar el arranque y facilitar extensiones de terceros.

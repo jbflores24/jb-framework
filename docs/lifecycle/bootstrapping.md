@@ -9,7 +9,7 @@ Application realiza:
 3. construccion de Container y Router;
 4. registro de bindings de infraestructura;
 5. configuracion de cache de rutas;
-6. ejecucion de run.
+6. ejecución de `run()`.
 
 ## Riesgo principal
 

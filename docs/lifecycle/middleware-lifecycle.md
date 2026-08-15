@@ -1,17 +1,17 @@
-# Middleware lifecycle
+# Ciclo de vida de middlewares
 
 ## Implementado
 
-- Middlewares se ejecutan como pipeline alrededor del handler.
+- Los middlewares se ejecutan como un pipeline alrededor del handler.
 - Cada middleware puede:
-  - permitir paso al siguiente;
-  - interrumpir flujo con error/control de acceso;
-  - enriquecer Request.
+  - permitir el paso al siguiente;
+  - interrumpir el flujo con un error o control de acceso;
+  - enriquecer la `Request`.
 
 ## Orden operativo
 
-El orden de declaracion en ruta define el orden de ejecucion.
+El orden de declaración en la ruta define el orden de ejecución.
 
 ## Recomendacion
 
-Mantener middlewares de seguridad/autorizacion antes de middlewares de logica de dominio.
+Mantener los middlewares de seguridad/autorización antes de los middlewares de lógica de dominio.

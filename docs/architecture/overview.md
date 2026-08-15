@@ -9,7 +9,7 @@ El framework privilegia:
 - flujo HTTP explicito;
 - dependencias de produccion minimas;
 - capa de seguridad integrada;
-- capacidades de generacion por CLI para acelerar bootstrap de proyectos.
+- capacidades de generación por CLI para acelerar el arranque de proyectos.
 
 ## 2. Objetivos arquitectonicos
 
@@ -43,7 +43,7 @@ El framework privilegia:
 - Response
 - HttpException
 
-Responsabilidad: bootstrap, enrutamiento, resolucion de dependencias y normalizacion de respuestas.
+Responsabilidad: arranque, enrutamiento, resolución de dependencias y normalización de respuestas.
 
 ### 4.3 Capa de capacidades transversales
 
@@ -89,7 +89,7 @@ Responsabilidad: scaffolding y operaciones de mantenimiento de proyecto.
 - Sistema formal de Providers para registro modular desacoplado.
 - Capa de Events para extension basada en hooks.
 
-## 6. Flujo de ejecucion
+## 6. Flujo de ejecución
 
 ### HTTP
 
@@ -157,7 +157,7 @@ El detalle modulo a modulo se documenta en docs/modules.
 
 - Validaciones de configuracion sensible.
 - Headers y controles de seguridad en flujo HTTP.
-- Modulo Security con detectores y scoring.
+- Módulo Security con detectores y scoring.
 - Auth + Permission middlewares.
 
 ### Base de datos y multi-driver

@@ -26,7 +26,7 @@ Este documento describe las decisiones de diseño, la organización por capas y 
 │                   Core HTTP                     │
 │     Router → Middleware → Controller → Response │
 ├──────────────────┬──────────────────────────────┤
-│    Auth / JWT    │   Security Module            │
+│    Auth / JWT    │   Módulo de seguridad        │
 ├──────────────────┼──────────────────────────────┤
 │    Database      │   Validation / Cache / Log   │
 │  PDO · QB · Repo │                              │

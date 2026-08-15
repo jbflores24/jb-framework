@@ -15,7 +15,7 @@ class LoginDetector extends AbstractDetector
     }
 
     /**
-     * Pre-request analysis: nothing to check before the controller runs.
+     * Análisis previo a la solicitud: no hay nada que revisar antes de que se ejecute el controlador.
      */
     public function analyze(SecurityRequest $request, SecurityConfig $config): array
     {
@@ -23,8 +23,8 @@ class LoginDetector extends AbstractDetector
     }
 
     /**
-     * Post-response analysis: detect repeated failed login attempts (401/403)
-     * on endpoints whose path contains "login".
+     * Análisis posterior a la respuesta: detecta intentos fallidos de inicio de sesión (401/403)
+     * en endpoints cuya ruta contiene "login".
      */
     public function analyzeResponse(SecurityRequest $request, int $statusCode, SecurityConfig $config): array
     {

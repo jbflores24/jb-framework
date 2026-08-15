@@ -1,13 +1,13 @@
-# Request lifecycle
+# Ciclo de vida de la solicitud
 
 ## Implementado
 
-- Request se captura desde globals HTTP.
-- Router resuelve ruta y parametros dinamicos.
-- Middlewares agregan o validan contexto.
-- Handler consume Request enriquecido.
-- Response serializa salida.
+- La `Request` se captura desde las variables globales de HTTP.
+- El `Router` resuelve la ruta y los parámetros dinámicos.
+- Los middlewares agregan o validan contexto.
+- El handler consume la `Request` enriquecida.
+- `Response` serializa la salida.
 
 ## Riesgos
 
-- enriquecimiento excesivo del Request sin contratos claros entre middlewares.
+- enriquecimiento excesivo de la `Request` sin contratos claros entre middlewares.

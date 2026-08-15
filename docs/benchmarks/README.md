@@ -1,4 +1,4 @@
-# Benchmarks Index
+# Índice de benchmarks
 
-- [Benchmark methodology](methodology.md)
-- [Academic protocol](academic-protocol.md)
+- [Metodología de benchmark](methodology.md)
+- [Protocolo académico](academic-protocol.md)

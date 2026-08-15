@@ -1,4 +1,4 @@
-# Future modules and extensions
+# Módulos y extensiones futuras
 
 ## Modulos futuros sugeridos
 
@@ -31,4 +31,4 @@ Objetivo: separar telemetria de logs operativos y habilitar exportacion estandar
 - resolver un problema tecnico real;
 - mantener bajo acoplamiento;
 - incluir estrategia de test;
-- documentar impacto en arquitectura y roadmap.
+- documentar impacto en arquitectura y hoja de ruta.

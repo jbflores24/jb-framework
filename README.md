@@ -1,39 +1,39 @@
 # JB Framework
 
-JB Framework is a lightweight PHP 8.2 framework for JSON REST APIs.
-It focuses on clear code, security by default, and a small core that is easy to audit.
+JB Framework es un framework PHP 8.2 ligero para APIs REST JSON.
+Se enfoca en código claro, seguridad por defecto y un núcleo pequeño y fácil de auditar.
 
-## What it includes
+## Qué incluye
 
-- HTTP core with Router, Request, Response, Container and HttpException
-- PDO database layer with QueryBuilder, BaseRepository, migrations and seeders
-- JWT authentication and permission middleware
-- Security module with threat detection, scoring, allowlists and denylists
-- File cache, logger, mailer, rate limiting and validation utilities
-- CLI for project creation, scaffolding, migrations, seeders and docs generation
-- PHPUnit 11 test suite with unit and integration coverage
+- Núcleo HTTP con Router, Request, Response, Container y HttpException
+- Capa de base de datos con QueryBuilder, BaseRepository, migraciones y seeders
+- Autenticación JWT y middleware de permisos
+- Módulo de seguridad con detección de amenazas, puntuación, listas de permitidos y bloqueados
+- Caché en archivo, registro, correo, limitación de solicitudes y utilidades de validación
+- CLI para crear proyectos, generar estructuras, ejecutar migraciones, seeders y documentación
+- Suite de pruebas PHPUnit 11 con cobertura unitaria e integral
 
-## What it does not include
+## Qué no incluye
 
-- HTML templating
-- ORM such as Eloquent
-- Queues, jobs or workers
+- Plantillas HTML
+- ORM como Eloquent
+- Colas, jobs o workers
 - WebSockets
-- Built-in event system
-- File upload storage layer
-- OAuth or social login
-- Admin UI
-- Multi-tenancy
-- Internationalization
+- Sistema de eventos integrado
+- Capa de almacenamiento para cargas de archivos
+- OAuth o inicio de sesión social
+- Interfaz administrativa
+- Multitenencia
+- Internacionalización
 
-## Requirements
+## Requisitos
 
-- PHP 8.2 or newer
-- Composer 2 or newer
-- PDO extension and a supported database driver
-- A web server with URL rewriting support
+- PHP 8.2 o superior
+- Composer 2 o superior
+- Extensión PDO y un controlador de base de datos compatible
+- Un servidor web con soporte para reescritura de URLs
 
-## Install the framework
+## Instalación del framework
 
 ```bash
 git clone https://github.com/jbflores24/jb-framework.git jb
@@ -42,7 +42,7 @@ composer install
 composer test
 ```
 
-## Create a new project
+## Crear un proyecto nuevo
 
 ```bash
 php bin/jb new mi_api
@@ -50,13 +50,13 @@ cd mi_api
 composer install
 ```
 
-Then start the local server:
+Luego inicia el servidor local:
 
 ```bash
 php jb serve
 ```
 
-## Generate a resource
+## Generar un recurso
 
 ```bash
 php jb make:scaffold Producto
@@ -65,26 +65,26 @@ php jb seed Producto
 php jb test
 ```
 
-The scaffold command creates the controller, model, migration, seeder, unit test, integration test, route block, security permission and audit entry.
+El comando make:scaffold crea el controlador, el modelo, la migración, el seeder, la prueba unitaria, la prueba de integración, el bloque de rutas, el permiso de seguridad y la entrada de auditoría.
 
-## Documentation
+## Documentación
 
-- [Quickstart](docs/QUICKSTART.md)
-- [CLI reference](docs/CLI_REFERENCE.md)
-- [Project structure](docs/PROJECT_STRUCTURE.md)
-- [Configuration](docs/CONFIGURATION.md)
-- [Testing](docs/TESTING.md)
-- [Deployment](docs/DEPLOYMENT.md)
-- [Performance](docs/PERFORMANCE.md)
-- [Roadmap](docs/ROADMAP.md)
-- [Community](docs/COMMUNITY.md)
-- [Internal index](docs/INDEX.md)
+- [Inicio rápido](docs/QUICKSTART.md)
+- [Referencia CLI](docs/CLI_REFERENCE.md)
+- [Estructura del proyecto](docs/PROJECT_STRUCTURE.md)
+- [Configuración](docs/CONFIGURATION.md)
+- [Pruebas](docs/TESTING.md)
+- [Despliegue](docs/DEPLOYMENT.md)
+- [Rendimiento](docs/PERFORMANCE.md)
+- [Hoja de ruta](docs/ROADMAP.md)
+- [Comunidad](docs/COMMUNITY.md)
+- [Índice interno](docs/INDEX.md)
 
-## Example project
+## Proyecto de ejemplo
 
-The `examples/demo_api/` directory contains a lightweight example structure for reference.
+El directorio `examples/demo_api/` contiene una estructura de ejemplo ligera para referencia.
 
-To create a runnable project, use the CLI from the framework root:
+Para crear un proyecto ejecutable, usa la CLI desde la raíz del framework:
 
 ```bash
 php bin/jb new mi_api
@@ -92,4 +92,4 @@ cd mi_api
 composer install
 ```
 
-MIT License.
+Licencia MIT.

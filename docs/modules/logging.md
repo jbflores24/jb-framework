@@ -1,4 +1,4 @@
-# Modulo Logging
+# Módulo Logging
 
 ## Proposito
 
@@ -8,7 +8,7 @@ Registrar eventos operativos y de seguridad para trazabilidad.
 
 - escritura estructurada de logs;
 - soporte de niveles;
-- correlacion de eventos en flujos extendidos.
+- correlación de eventos en flujos extendidos.
 
 ## Clases principales
 
@@ -19,8 +19,8 @@ Registrar eventos operativos y de seguridad para trazabilidad.
 
 ## Dependencias
 
-- filesystem;
-- opcionalmente otros modulos (Auth/Security) para eventos.
+- sistema de archivos;
+- opcionalmente otros módulos (`Auth`/`Security`) para eventos.
 
 ## Flujo interno
 
@@ -28,9 +28,9 @@ evento -> logger -> salida estructurada en archivos.
 
 ## Extensibilidad
 
-- adaptadores futuros para transporte asincrono.
+- adaptadores futuros para transporte asíncrono.
 
 ## Riesgos tecnicos
 
-- escritura sincronica en request path;
-- crecimiento de volumen sin politicas de rotacion externas.
+- escritura síncrona en la ruta de la solicitud;
+- crecimiento de volumen sin políticas de rotación externas.

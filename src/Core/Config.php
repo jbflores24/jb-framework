@@ -14,7 +14,7 @@ class Config
     }
 
     /**
-     * Load .env and PHP config files from the application base path.
+     * Carga los archivos `.env` y de configuración PHP desde la ruta base de la aplicación.
      */
     public function load(): void
     {
@@ -23,7 +23,7 @@ class Config
     }
 
     /**
-     * Read a configuration value using dot notation.
+     * Lee un valor de configuración usando notación de punto.
      */
     public function get(string $key, mixed $default = null): mixed
     {
@@ -40,7 +40,7 @@ class Config
     }
 
     /**
-     * Set a configuration value using dot notation.
+     * Establece un valor de configuración usando notación de punto.
      */
     public function set(string $key, mixed $value): void
     {
@@ -57,7 +57,7 @@ class Config
     }
 
     /**
-     * Return true when the app is running with debug output enabled.
+     * Devuelve `true` cuando la aplicación se ejecuta con salida de depuración habilitada.
      */
     public function isDebug(): bool
     {
@@ -65,7 +65,7 @@ class Config
     }
 
     /**
-     * Return true when APP_ENV is production.
+     * Devuelve `true` cuando `APP_ENV` es `production`.
      */
     public function isProduction(): bool
     {
@@ -73,7 +73,7 @@ class Config
     }
 
     /**
-     * Return the application base path.
+     * Devuelve la ruta base de la aplicación.
      */
     public function basePath(): string
     {

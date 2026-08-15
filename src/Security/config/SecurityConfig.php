@@ -16,7 +16,7 @@ class SecurityConfig
     }
 
     /**
-     * Override security configuration for tests.
+     * Sobrescribe la configuración de seguridad para las pruebas.
      *
      * @param array<string, mixed> $values
      */
@@ -26,7 +26,7 @@ class SecurityConfig
     }
 
     /**
-     * Clear testing overrides.
+     * Borra las sobreescrituras de prueba.
      */
     public static function clearTesting(): void
     {
@@ -34,7 +34,7 @@ class SecurityConfig
     }
 
     /**
-     * Read a security value.
+     * Lee un valor de seguridad.
      */
     public function get(string $key, mixed $default = null): mixed
     {
@@ -46,7 +46,7 @@ class SecurityConfig
     }
 
     /**
-     * Return whether the security module is enabled.
+     * Devuelve si el módulo de seguridad está habilitado.
      */
     public function enabled(): bool
     {

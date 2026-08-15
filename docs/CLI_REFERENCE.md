@@ -1,6 +1,6 @@
-# CLI Reference
+# Referencia CLI
 
-JB Framework ships with a CLI for project creation, code generation, migrations, maintenance and reporting.
+JB Framework incluye una CLI para crear proyectos, generar código, ejecutar migraciones, dar mantenimiento y producir reportes.
 
 ## Command format
 
@@ -14,21 +14,21 @@ In a generated project:
 php jb <command> [arguments]
 ```
 
-## Project commands
+## Comandos de proyecto
 
 ### `new <name>`
 
-Create a new project.
+Crear un proyecto nuevo.
 
 ```bash
 php bin/jb new mi_api
 ```
 
-Creates the project structure, copies `.env.example` to `.env` and adds a local `jb` launcher.
+Crea la estructura del proyecto, copia `.env.example` a `.env` y agrega un lanzador local `jb`.
 
 ### `serve`
 
-Start the local PHP built-in server on `127.0.0.1:8000`.
+Inicia el servidor integrado de PHP en `127.0.0.1:8000`.
 
 ```bash
 php jb serve
@@ -36,17 +36,17 @@ php jb serve
 
 ### `env`
 
-Print a small set of useful configuration values.
+Imprime un conjunto pequeño de valores útiles de configuración.
 
 ```bash
 php jb env
 ```
 
-## Generators
+## Generadores
 
 ### `make:controller <Name>`
 
-Creates `app/Controllers/<Name>Controller.php`.
+Crea `app/Controllers/<Name>Controller.php`.
 
 ```bash
 php jb make:controller Cliente
@@ -54,20 +54,20 @@ php jb make:controller Cliente
 
 ### `make:model <TableName>`
 
-Creates `app/Repositories/<SingularName>Repository.php` from database metadata.
+Crea `app/Repositories/<SingularName>Repository.php` a partir de metadatos de la base de datos.
 
 ```bash
 php jb make:model estudiantes
 ```
 
-Notes:
-- Uses `information_schema` metadata.
-- Supports MySQL and PostgreSQL.
-- Generates `@property` annotations for detected columns.
+Notas:
+- Usa metadatos de `information_schema`.
+- Soporta MySQL y PostgreSQL.
+- Genera anotaciones `@property` para las columnas detectadas.
 
 ### `make:migration <Name>`
 
-Creates a timestamped migration file in `database/migrations/`.
+Crea un archivo de migración con marca de tiempo en `database/migrations/`.
 
 ```bash
 php jb make:migration create_clientes_table
@@ -75,7 +75,7 @@ php jb make:migration create_clientes_table
 
 ### `make:seeder <Name>`
 
-Creates `database/seeders/<Name>Seeder.php`.
+Crea `database/seeders/<Name>Seeder.php`.
 
 ```bash
 php jb make:seeder Cliente
@@ -83,7 +83,7 @@ php jb make:seeder Cliente
 
 ### `make:middleware <Name>`
 
-Creates `app/Middleware/<Name>Middleware.php`.
+Crea `app/Middleware/<Name>Middleware.php`.
 
 ```bash
 php jb make:middleware Audit
@@ -91,7 +91,7 @@ php jb make:middleware Audit
 
 ### `make:test <Name>`
 
-Creates `tests/Unit/<Name>Test.php`.
+Crea `tests/Unit/<Name>Test.php`.
 
 ```bash
 php jb make:test Cliente
@@ -99,7 +99,7 @@ php jb make:test Cliente
 
 ### `make:service <Name>`
 
-Creates `app/Services/<Name>Service.php`.
+Crea `app/Services/<Name>Service.php`.
 
 ```bash
 php jb make:service Cliente
@@ -107,13 +107,13 @@ php jb make:service Cliente
 
 ### `make:crud <Name>`
 
-Creates controller, model, migration, seeder and REST routes.
+Crea controlador, modelo, migración, seeder y rutas REST.
 
 ```bash
 php jb make:crud Cliente
 ```
 
-It registers these routes in `routes/api.php`:
+Registra estas rutas en `routes/api.php`:
 
 - `GET /api/clientes`
 - `GET /api/clientes/{id}`
@@ -123,31 +123,31 @@ It registers these routes in `routes/api.php`:
 
 ### `make:scaffold <Name>`
 
-Extends `make:crud` with tests and security-related project entries.
+Extiende `make:crud` con pruebas y entradas del proyecto relacionadas con seguridad.
 
 ```bash
 php jb make:scaffold Producto
 ```
 
-It creates:
+Crea:
 - `tests/Unit/ProductoUnitTest.php`
 - `tests/Integration/ProductoScaffoldTest.php`
 
-It also appends the scaffold route block, registers the security permission entry and writes the audit log entry.
+También agrega el bloque de rutas del scaffold, registra la entrada de permiso de seguridad y escribe la entrada de auditoría.
 
 ### `stub:publish`
 
-Copy the framework stubs into the current project so they can be customized locally.
+Copiar los stubs del framework al proyecto actual para personalizarlos de forma local.
 
 ```bash
 php jb stub:publish
 ```
 
-## Database commands
+## Comandos de base de datos
 
 ### `migrate`
 
-Run pending migrations.
+Ejecutar las migraciones pendientes.
 
 ```bash
 php jb migrate
@@ -155,7 +155,7 @@ php jb migrate
 
 ### `migrate:rollback`
 
-Rollback the last batch of migrations.
+Revertir el último lote de migraciones.
 
 ```bash
 php jb migrate:rollback
@@ -163,7 +163,7 @@ php jb migrate:rollback
 
 ### `migrate:fresh`
 
-Drop and re-run all migrations. This removes data.
+Eliminar y volver a ejecutar todas las migraciones. Esto elimina datos.
 
 ```bash
 php jb migrate:fresh
@@ -171,7 +171,7 @@ php jb migrate:fresh
 
 ### `migrate:status`
 
-Show the status of every migration.
+Mostrar el estado de cada migración.
 
 ```bash
 php jb migrate:status
@@ -179,7 +179,7 @@ php jb migrate:status
 
 ### `seed [Name]`
 
-Run one seeder or all seeders.
+Ejecutar un seeder o todos los seeders.
 
 ```bash
 php jb seed
@@ -187,11 +187,11 @@ php jb seed Producto
 php jb seed ProductoSeeder
 ```
 
-## Maintenance commands
+## Comandos de mantenimiento
 
 ### `cache:clear`
 
-Clear `storage/cache/`.
+Limpiar `storage/cache/`.
 
 ```bash
 php jb cache:clear
@@ -199,37 +199,37 @@ php jb cache:clear
 
 ### `logs:clear`
 
-Clear `storage/logs/`.
+Limpiar `storage/logs/`.
 
 ```bash
 php jb logs:clear
 ```
 
-## Quality and docs
+## Calidad y documentación
 
 ### `test`
 
-Run the project test suite.
+Ejecutar la suite de pruebas del proyecto.
 
 ```bash
 php jb test
 ```
 
-This delegates to `composer test`.
+Esto delega en `composer test`.
 
 ### `docs:generate`
 
-Generate `docs/swagger.yaml` from `routes/api.php`.
+Generar `docs/swagger.yaml` a partir de `routes/api.php`.
 
 ```bash
 php jb docs:generate
 ```
 
-## Operational tools
+## Herramientas operativas
 
 ### `alerts:check-silence [hours]`
 
-Check for silent tanks and generate alerts when needed.
+Comprobar estanques en silencio y generar alertas cuando sea necesario.
 
 ```bash
 php jb alerts:check-silence 24
@@ -237,7 +237,7 @@ php jb alerts:check-silence 24
 
 ### `producer:erase <producer_id>`
 
-Delete a producer and its related data.
+Eliminar un productor y sus datos relacionados.
 
 ```bash
 php jb producer:erase 15
@@ -245,7 +245,7 @@ php jb producer:erase 15
 
 ### `db:backup`
 
-Create a database backup under `storage/backups/`.
+Crear un respaldo de la base de datos en `storage/backups/`.
 
 ```bash
 php jb db:backup
@@ -253,16 +253,16 @@ php jb db:backup
 
 ### `report:generate <producer_id> [days]`
 
-Generate a CSV report for a producer.
+Generar un reporte CSV para un productor.
 
 ```bash
 php jb report:generate 15 7
 ```
 
-## Help
+## Ayuda
 
 ```bash
 php jb help
 ```
 
-Print the list of supported commands.
+Imprimir la lista de comandos disponibles.

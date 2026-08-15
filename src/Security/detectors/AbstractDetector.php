@@ -22,8 +22,8 @@ abstract class AbstractDetector
     }
 
     /**
-     * Post-response analysis hook. Detectors that only need pre-request
-     * analysis can ignore this; the default implementation is a no-op pass.
+     * Gancho de análisis posterior a la respuesta. Los detectores que solo necesitan información previa a la solicitud
+     * pueden ignorarlo; la implementación por defecto es un paso sin efecto.
      */
     public function analyzeResponse(SecurityRequest $request, int $statusCode, SecurityConfig $config): array
     {

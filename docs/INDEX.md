@@ -18,11 +18,11 @@ Portada interna de la documentación técnica del framework.
 
 - [Testing](TESTING.md)
 - [Despliegue](DEPLOYMENT.md)
-- [Performance](PERFORMANCE.md)
+- [Rendimiento](PERFORMANCE.md)
 
 ## Estado y dirección del proyecto
 
-- [Roadmap](ROADMAP.md)
+- [Hoja de ruta](ROADMAP.md)
 - [Comunidad y seguridad](COMMUNITY.md)
 - [Estatus actual](leeme_segunda_etapa.md)
 

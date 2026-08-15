@@ -15,7 +15,7 @@ class NotFoundDetector extends AbstractDetector
     }
 
     /**
-     * Pre-request analysis: nothing to check before the controller runs.
+     * Análisis previo a la solicitud: no hay nada que revisar antes de que se ejecute el controlador.
      */
     public function analyze(SecurityRequest $request, SecurityConfig $config): array
     {
@@ -23,8 +23,8 @@ class NotFoundDetector extends AbstractDetector
     }
 
     /**
-     * Post-response analysis: detect repeated 404 responses (path scanning)
-     * for the same IP.
+     * Análisis posterior a la respuesta: detecta respuestas 404 repetidas (rastreo de rutas)
+     * para la misma IP.
      */
     public function analyzeResponse(SecurityRequest $request, int $statusCode, SecurityConfig $config): array
     {

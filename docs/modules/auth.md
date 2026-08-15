@@ -1,4 +1,4 @@
-# Modulo Auth
+# Módulo Auth
 
 ## Proposito
 
@@ -7,7 +7,7 @@ Autenticar requests con JWT y aplicar autorizacion por permisos.
 ## Responsabilidades
 
 - emision y validacion de JWT;
-- inyeccion de claims autenticados al Request;
+- inyección de claims autenticados a la `Request`;
 - validacion de permisos por ruta.
 
 ## Clases principales
@@ -20,13 +20,13 @@ Autenticar requests con JWT y aplicar autorizacion por permisos.
 
 ## Dependencias
 
-- Core Request/Response;
+- núcleo `Request`/`Response`;
 - Config auth;
-- logging opcional para auditoria.
+- logging opcional para auditoría.
 
 ## Flujo interno
 
-Bearer token -> AuthMiddleware -> JWT decode -> claims disponibles -> PermissionMiddleware valida permisos.
+Bearer token -> `AuthMiddleware` -> decodificación de JWT -> claims disponibles -> `PermissionMiddleware` valida permisos.
 
 ## Extensibilidad
 

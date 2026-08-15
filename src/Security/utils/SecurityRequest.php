@@ -23,7 +23,7 @@ class SecurityRequest
     }
 
     /**
-     * Build a security request DTO from the framework request.
+     * Construye un DTO de seguridad a partir de la solicitud del framework.
      */
     public static function fromRequest(Request $request): self
     {

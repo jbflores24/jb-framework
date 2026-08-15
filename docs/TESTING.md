@@ -1,27 +1,27 @@
-# Testing Guide
+# Guía de pruebas
 
-JB Framework includes a PHPUnit 11 test suite for the framework itself and also generates test files for scaffolded projects.
+JB Framework incluye una suite de pruebas PHPUnit 11 para el framework en sí y también genera archivos de prueba para los proyectos creados con scaffold.
 
-## Run the suite
+## Ejecutar la suite
 
 ```bash
 composer test
 ```
 
-The current repository suite finishes with:
+La suite actual del repositorio termina con:
 
 ```bash
 OK (13 tests, 29 assertions)
 ```
 
-To run only a subset:
+Para ejecutar solo un subconjunto:
 
 ```bash
 composer test-unit
 composer test-integration
 ```
 
-## Test layout
+## Estructura de pruebas
 
 ```text
 tests/
@@ -31,29 +31,29 @@ tests/
 `-- Unit/
 ```
 
-The `Benchmark/` directory is reserved for benchmark checks.
+El directorio `Benchmark/` está reservado para verificaciones de benchmark.
 
-## Base test case
+## Clase base de pruebas
 
-`tests/BaseTestCase.php` is a shared base class for framework tests. It currently extends `PHPUnit\Framework\TestCase` and does not add extra helpers yet.
+`tests/BaseTestCase.php` es una clase base compartida para las pruebas del framework. Actualmente extiende `PHPUnit\Framework\TestCase` y todavía no agrega ayudantes extra.
 
-## Current coverage
+## Cobertura actual
 
-The suite currently covers the main framework areas, including:
+La suite cubre actualmente las áreas principales del framework, entre ellas:
 
-- Core HTTP objects
-- Configuration
-- Database and repositories
-- Authentication and JWT
-- Routing
-- Validation
-- Security and bootstrap checks
+- Objetos HTTP del núcleo
+- Configuración
+- Base de datos y repositorios
+- Autenticación y JWT
+- Enrutamiento
+- Validación
+- Verificaciones de seguridad y arranque
 
-## Writing tests
+## Escribir pruebas
 
-Use one responsibility per test and keep the assertions focused.
+Usa una sola responsabilidad por prueba y mantén las aserciones enfocadas.
 
-Example unit test:
+Ejemplo de prueba unitaria:
 
 ```php
 <?php
@@ -73,7 +73,7 @@ class ExampleTest extends BaseTestCase
 }
 ```
 
-Example integration test with SQLite in memory:
+Ejemplo de prueba de integración con SQLite en memoria:
 
 ```php
 <?php
@@ -96,26 +96,26 @@ class ExampleIntegrationTest extends BaseTestCase
 }
 ```
 
-## Scaffolded projects
+## Proyectos con scaffold
 
-When you run `make:scaffold <Name>`, the generated project includes:
+Cuando ejecutas `make:scaffold <Name>`, el proyecto generado incluye:
 
 - `tests/Unit/<Name>UnitTest.php`
 - `tests/Integration/<Name>ScaffoldTest.php`
 
-## PHPUnit configuration
+## Configuración de PHPUnit
 
-The repository uses `phpunit.xml` with these suites:
+El repositorio usa `phpunit.xml` con estas suites:
 
 - `Unit`
 - `Integration`
 - `Benchmark`
 
-The integration suite uses SQLite in memory (`:memory:`) by default, so it does not require an external database server.
+La suite de integración usa SQLite en memoria (`:memory:`) por defecto, así que no requiere un servidor externo de base de datos.
 
-## Good practices
+## Buenas prácticas
 
-- Keep unit tests isolated.
-- Use SQLite in memory for integration tests when possible.
-- Clean shared state in `tearDown()` when a test changes global configuration.
-- Avoid external services in the main suite.
+- Mantén las pruebas unitarias aisladas.
+- Usa SQLite en memoria para las pruebas de integración cuando sea posible.
+- Limpia el estado compartido en `tearDown()` cuando una prueba cambie la configuración global.
+- Evita servicios externos en la suite principal.

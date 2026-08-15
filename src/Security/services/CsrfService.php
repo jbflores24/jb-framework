@@ -18,7 +18,7 @@ class CsrfService
     }
 
     /**
-     * Return whether CSRF validation is enabled for security admin actions.
+     * Devuelve si la validación CSRF está habilitada para las acciones de administración de seguridad.
      */
     public function enabled(): bool
     {
@@ -26,7 +26,7 @@ class CsrfService
     }
 
     /**
-     * Generate a random, single-use CSRF token bound to a user id and store it server-side.
+     * Genera un token CSRF aleatorio, de un solo uso, ligado a un ID de usuario y lo almacena del lado del servidor.
      */
     public function token(int|string $userId): string
     {
@@ -37,7 +37,7 @@ class CsrfService
     }
 
     /**
-     * Validate a provided CSRF token. On success, the token is invalidated immediately
+     * Valida un token CSRF proporcionado. Si la validación es correcta, el token se invalida de inmediato
      * (single use) to prevent replay.
      */
     public function valid(int|string $userId, ?string $token): bool

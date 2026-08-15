@@ -1,13 +1,13 @@
-# Modulo Cache
+# Módulo Cache
 
 ## Proposito
 
-Proveer cache simple por archivo como default operativo del framework.
+Proveer caché simple por archivo como comportamiento operativo por defecto del framework.
 
 ## Responsabilidades
 
 - lectura/escritura de valores serializados;
-- expiracion por TTL;
+- expiración por TTL;
 - limpieza de entradas.
 
 ## Clases principales
@@ -17,7 +17,7 @@ Proveer cache simple por archivo como default operativo del framework.
 
 ## Dependencias
 
-- filesystem local.
+- sistema de archivos local.
 
 ## Flujo interno
 
@@ -29,5 +29,5 @@ CacheInterface permite migrar a backends distribuidos.
 
 ## Riesgos tecnicos
 
-- I/O sincronico;
+- E/S síncrona;
 - limitaciones de concurrencia en alta carga.

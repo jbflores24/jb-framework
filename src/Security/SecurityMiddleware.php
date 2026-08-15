@@ -45,7 +45,7 @@ class SecurityMiddleware
     }
 
     /**
-     * Run the security detector pipeline before application routing.
+     * Ejecuta el pipeline de detectores de seguridad antes del enrutamiento de la aplicación.
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -105,9 +105,9 @@ class SecurityMiddleware
     }
 
     /**
-     * Run post-response detectors (e.g. failed login, 404 scanning) and
-     * persist threats. Never throws: this runs after the response is ready
-     * and must not break the request/response cycle.
+     * Ejecuta detectores posteriores a la respuesta (por ejemplo, inicio de sesión fallido o rastreo 404) y
+     * persiste amenazas. Nunca lanza excepciones: esto ocurre después de que la respuesta está lista
+     * y no debe romper el ciclo solicitud/respuesta.
      */
     private function runPostResponseDetectors(SecurityRequest $securityRequest, int $statusCode): void
     {
@@ -122,7 +122,7 @@ class SecurityMiddleware
                 $this->manager->recordThreat($securityRequest, $result, !$learning);
             }
         } catch (\Throwable) {
-            // Post-response analysis must never affect an already-generated response.
+            // El análisis posterior a la respuesta nunca debe afectar una respuesta ya generada.
         }
     }
 

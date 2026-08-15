@@ -22,7 +22,7 @@ class Connection
     }
 
     /**
-     * Initialize the singleton connection manager.
+     * Inicializa el administrador de conexión singleton.
      *
      * @param array<string, mixed>|null $options
      */
@@ -32,19 +32,19 @@ class Connection
     }
 
     /**
-     * Return the current singleton connection manager.
+     * Devuelve el administrador de conexión singleton actual.
      */
     public static function getInstance(): self
     {
         if (self::$instance === null) {
-            throw new PDOException('Database connection has not been initialized.');
+            throw new PDOException('La conexión a la base de datos no se ha inicializado.');
         }
 
         return self::$instance;
     }
 
     /**
-     * Return an active PDO connection.
+     * Devuelve una conexión PDO activa.
      */
     public function pdo(): PDO
     {
@@ -56,7 +56,7 @@ class Connection
     }
 
     /**
-     * Reconnect and return the new PDO instance.
+     * Se reconecta y devuelve la nueva instancia de PDO.
      */
     public function reconnect(): PDO
     {
@@ -66,7 +66,7 @@ class Connection
     }
 
     /**
-     * Execute a callback inside a transaction.
+     * Ejecuta un callback dentro de una transacción.
      */
     public function transaction(callable $callback): mixed
     {
@@ -88,7 +88,7 @@ class Connection
     }
 
     /**
-     * Return the configured database driver.
+     * Devuelve el controlador de base de datos configurado.
      */
     public function driver(): string
     {

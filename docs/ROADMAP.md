@@ -1,8 +1,8 @@
-# Roadmap
+# Hoja de ruta
 
 ## Resumen
 
-JB Framework sigue una hoja de ruta incremental enfocada en seguridad, robustez operativa, testing, despliegue, performance y gobernanza.
+JB Framework sigue una hoja de ruta incremental enfocada en seguridad, robustez operativa, pruebas, despliegue, rendimiento y gobernanza.
 
 ## Etapas
 

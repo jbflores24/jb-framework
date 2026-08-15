@@ -8,7 +8,7 @@ use Jb\Database\Migration;
 
 return new class (Connection::getInstance()) extends Migration {
     /**
-     * Create security module tables.
+     * Crea las tablas del módulo de seguridad.
      */
     public function up(): void
     {
@@ -72,7 +72,7 @@ return new class (Connection::getInstance()) extends Migration {
     }
 
     /**
-     * Drop security module tables.
+     * Elimina las tablas del módulo de seguridad.
      */
     public function down(): void
     {

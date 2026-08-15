@@ -1,10 +1,10 @@
-# Academic protocol
+# Protocolo académico
 
-## Hipotesis tecnicas sugeridas
+## Hipótesis técnicas sugeridas
 
-1. Un nucleo con menor complejidad estructural reduce tiempo de onboarding tecnico.
-2. La estrategia PDO + QueryBuilder reduce overhead de abstraccion frente a ORM pesado en escenarios CRUD simples.
-3. Pipeline de seguridad integrado mejora trazabilidad de incidentes sin dependencia de componentes externos.
+1. Un núcleo con menor complejidad estructural reduce el tiempo de integración técnica.
+2. La estrategia PDO + `QueryBuilder` reduce la sobrecarga de abstracción frente a un ORM pesado en escenarios CRUD simples.
+3. Un pipeline de seguridad integrado mejora la trazabilidad de incidentes sin depender de componentes externos.
 
 ## Variables
 
@@ -12,26 +12,26 @@
 
 - framework evaluado;
 - escenario de carga;
-- tipo de operacion (read/write/auth).
+- tipo de operación (lectura/escritura/autenticación).
 
 ### Dependientes
 
 - latencia;
 - memoria;
-- tiempo de bootstrap;
-- queries por operacion;
-- defectos detectados por tests de regresion.
+- tiempo de arranque;
+- consultas por operación;
+- defectos detectados por pruebas de regresión.
 
 ## Metodologia
 
 1. Definir escenarios equivalentes.
-2. Ejecutar benchmarks con repeticion controlada.
+2. Ejecutar benchmarks con repetición controlada.
 3. Registrar resultados en formato estructurado.
-4. Aplicar analisis estadistico descriptivo.
-5. Interpretar tradeoffs de arquitectura.
+4. Aplicar análisis estadístico descriptivo.
+5. Interpretar compromisos de arquitectura.
 
 ## Productos publicables potenciales
 
-- reporte comparativo multi-framework para APIs REST JSON;
-- estudio sobre costo de seguridad integrada en frameworks ligeros;
-- estudio sobre mantenibilidad y acoplamiento en nucleos PHP minimalistas.
+- reporte comparativo entre varios frameworks para APIs REST JSON;
+- estudio sobre el costo de seguridad integrada en frameworks ligeros;
+- estudio sobre mantenibilidad y acoplamiento en núcleos PHP minimalistas.

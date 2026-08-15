@@ -1,4 +1,4 @@
-# Performance
+# Rendimiento
 
 ## Objetivo
 
@@ -50,7 +50,7 @@ Qué mide cada uno:
 
 El RateLimiter actual escribe un archivo JSON por identidad y ventana. Es adecuado para desarrollo, single node o tráfico moderado, pero escala mal bajo alta concurrencia por:
 
-- I/O síncrono por request.
+- E/S síncrona por solicitud.
 - Contención sobre el mismo archivo.
 - Dificultad para escalar horizontalmente.
 
@@ -58,7 +58,7 @@ Recomendación futura: abstraer el backend a Redis o Memcached.
 
 ### Logging síncrono
 
-Logger y DistributedLogger escriben a disco en el request actual. Esto simplifica la operación, pero añade latencia acumulada cuando el volumen de logs aumenta.
+Logger y `DistributedLogger` escriben a disco en la solicitud actual. Esto simplifica la operación, pero añade latencia acumulada cuando el volumen de registros aumenta.
 
 Recomendación futura:
 
@@ -68,4 +68,4 @@ Recomendación futura:
 
 ## Resultado esperado
 
-En una máquina local estándar, el benchmark del Router con cache habilitada debe permanecer por debajo de 2 ms promedio por dispatch del escenario medido.
+En una máquina local estándar, el benchmark del `Router` con caché habilitada debe permanecer por debajo de 2 ms en promedio por dispatch del escenario medido.

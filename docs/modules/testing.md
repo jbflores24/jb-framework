@@ -1,4 +1,4 @@
-# Modulo Testing
+# Módulo Testing
 
 ## Proposito
 
@@ -8,7 +8,7 @@ Asegurar estabilidad funcional y tecnica del framework por capas de prueba.
 
 - validar unidades atomicas;
 - validar integracion entre componentes;
-- medir performance baseline.
+- medir la línea base de rendimiento.
 
 ## Estructura actual
 
@@ -24,4 +24,4 @@ Asegurar estabilidad funcional y tecnica del framework por capas de prueba.
 
 ## Riesgos tecnicos
 
-- riesgo de deuda de cobertura en nuevas capacidades si no se exigen tests por PR.
+- riesgo de deuda de cobertura en nuevas capacidades si no se exigen pruebas por PR.

@@ -30,7 +30,7 @@ class Application
     }
 
     /**
-     * Bootstrap configuration and core services.
+     * Inicializa la configuración y los servicios del núcleo.
      */
     public function bootstrap(): self
     {
@@ -51,7 +51,7 @@ class Application
     }
 
     /**
-     * Load route definitions from a PHP file.
+     * Carga definiciones de rutas desde un archivo PHP.
      */
     public function routes(string $path): self
     {
@@ -62,7 +62,7 @@ class Application
     }
 
     /**
-     * Handle one HTTP request and send the JSON response.
+     * Procesa una solicitud HTTP y envía la respuesta JSON.
      */
     public function run(?Request $request = null): void
     {
@@ -111,7 +111,7 @@ class Application
     }
 
     /**
-     * Return the dependency injection container.
+     * Devuelve el contenedor de inyección de dependencias.
      */
     public function container(): Container
     {
@@ -119,7 +119,7 @@ class Application
     }
 
     /**
-     * Return the loaded configuration repository.
+     * Devuelve el repositorio de configuración cargado.
      */
     public function config(): Config
     {
@@ -181,7 +181,7 @@ class Application
 
     private function handleCors(Request $request): void
     {
-        // CORS is handled exclusively by Apache .htaccess to prevent duplicate headers in XAMPP
+        // CORS se maneja exclusivamente desde `.htaccess` de Apache para evitar cabeceras duplicadas en XAMPP
     }
 
     private function stripBaseRoute(Request $request): Request
