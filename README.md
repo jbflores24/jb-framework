@@ -80,6 +80,12 @@ El comando make:scaffold crea el controlador, el modelo, la migración, el seede
 - [Comunidad](docs/COMMUNITY.md)
 - [Índice interno](docs/INDEX.md)
 
+## Reproducibilidad del estudio
+
+- [jbtest](https://github.com/jbflores24/jbtest): entorno de prueba usado para medir el comportamiento del framework.
+- [pruebas_jb](https://github.com/jbflores24/pruebas_jb): herramientas, metodología y trazabilidad del estudio.
+- [research-2026-v1](https://github.com/jbflores24/jb-framework/tree/research-2026-v1): referencia estable de esta documentación y de los artefactos asociados.
+
 ## Proyecto de ejemplo
 
 El directorio `examples/demo_api/` contiene una estructura de ejemplo ligera para referencia.
