@@ -117,7 +117,7 @@ jb/
 
 ## Estructura de un proyecto generado
 
-Cuando se ejecuta `php bin/jb new nombre_proyecto`, se crea la siguiente estructura:
+Cuando se ejecuta `composer create-project jbflores24/skeleton nombre_proyecto` (o `php bin/jb new nombre_proyecto` desde una copia local del framework), se crea la siguiente estructura. El código base vive en el directorio `skeleton/` del repositorio del framework:
 
 ```
 nombre_proyecto/

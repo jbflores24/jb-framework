@@ -2,7 +2,20 @@
 
 Esta guía lleva de cero a una API REST funcional con JB Framework.
 
-## 1. Instalar el framework
+## 1. Crear un proyecto nuevo
+
+Con Composer 2 y PHP 8.2 o superior:
+
+```bash
+composer create-project jbflores24/skeleton mi_api
+cd mi_api
+```
+
+Composer descarga el framework y el proyecto base. Al terminar, `composer install` ya generó el `.env` con un `JWT_SECRET` aleatorio y las carpetas de `storage/`. El proyecto incluye un lanzador local llamado `jb`.
+
+## 2. Opcional: clonar el framework
+
+Solo necesitas esto si vas a modificar el framework o correr sus pruebas:
 
 ```bash
 git clone https://github.com/jbflores24/jb-framework.git jb
@@ -11,15 +24,13 @@ composer install
 composer test
 ```
 
-## 2. Crear un proyecto nuevo
+Para crear un proyecto desde una copia local del framework, sin Packagist:
 
 ```bash
 php bin/jb new mi_api
 cd mi_api
 composer install
 ```
-
-El comando crea la estructura base, copia `.env.example` a `.env` y deja un lanzador local llamado `jb`.
 
 ## 3. Revisar la configuracion
 

@@ -7,41 +7,39 @@ Ejemplos prácticos de uso del framework con las salidas reales que se pueden es
 ## 1. Crear un proyecto nuevo
 
 ```bash
-php bin/jb new blog_api
+composer create-project jbflores24/skeleton blog_api
 ```
 
-**Salida esperada:**
+**Salida esperada (final):**
 
 ```
-Proyecto [blog_api] creado.
+Created project in blog_api
+...
+Archivo .env creado con un JWT_SECRET nuevo.
+```
 
-Próximos pasos:
-  cd blog_api
-  composer install
-  php jb serve
+Después:
+
+```bash
+cd blog_api
+php jb serve
 ```
 
 **Estructura generada:**
 
 ```
 blog_api/
-├── app/Controllers/
-├── app/Models/
-├── database/migrations/
-│   └── 2026_05_12_000000_create_security_tables.php
-├── database/seeders/
-├── public/index.php
-├── public/.htaccess
-├── routes/api.php
+├── app/
 ├── config/
-├── storage/cache/
-├── storage/logs/
-├── tests/
-├── .env
-├── .env.example
-├── composer.json
-└── jb
+├── database/migrations/
+├── public/
+├── routes/
+├── scripts/post-install.php
+├── storage/
+└── tests/
 ```
+
+Alternativa desde una copia local del framework: `php bin/jb new blog_api`, que imprime `Proyecto [blog_api] creado.`.
 
 ---
 

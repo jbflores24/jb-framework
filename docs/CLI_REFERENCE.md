@@ -18,13 +18,19 @@ php jb <command> [arguments]
 
 ### `new <name>`
 
-Crear un proyecto nuevo.
+Crear un proyecto nuevo desde una copia local del framework.
 
 ```bash
 php bin/jb new mi_api
 ```
 
-Crea la estructura del proyecto, copia `.env.example` a `.env` y agrega un lanzador local `jb`.
+Crea la estructura del proyecto, copia `.env.example` a `.env` y agrega un lanzador local `jb`. Para la forma recomendada, que no requiere clonar el framework, usa Composer:
+
+```bash
+composer create-project jbflores24/skeleton mi_api
+```
+
+Este comando también genera el `.env` con un `JWT_SECRET` aleatorio después de instalar las dependencias.
 
 ### `serve`
 
