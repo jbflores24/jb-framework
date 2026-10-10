@@ -46,7 +46,7 @@ class ProjectBuilder
         file_put_contents($target . '/composer.json', json_encode([
             'name' => $composerName,
             'type' => 'project',
-            'require' => ['php' => '>=8.2', 'jb/framework' => '^1.0'],
+            'require' => ['php' => '>=8.2', 'jbflores24/framework' => '^1.0'],
             'require-dev' => ['phpunit/phpunit' => '^11.0'],
             'autoload' => ['psr-4' => ['App\\' => 'app/']],
             'autoload-dev' => ['psr-4' => ['Tests\\' => 'tests/']],
@@ -98,7 +98,7 @@ declare(strict_types=1);
 chdir(__DIR__);
 
 $autoload = __DIR__ . '/vendor/autoload.php';
-$frameworkPath = __DIR__ . '/vendor/jb/framework';
+$frameworkPath = __DIR__ . '/vendor/jbflores24/framework';
 
 if (!is_file($autoload) || !is_dir($frameworkPath)) {
     fwrite(STDERR, "Dependencias no instaladas. Ejecuta: composer install\n");

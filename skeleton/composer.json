@@ -1,11 +1,11 @@
 {
-    "name": "jb/skeleton",
+    "name": "jbflores24/skeleton",
     "description": "Proyecto base para APIs REST con JB Framework.",
     "type": "project",
     "license": "MIT",
     "require": {
         "php": ">=8.2",
-        "jb/framework": "^1.0"
+        "jbflores24/framework": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.0"
