@@ -44,16 +44,22 @@ composer test
 
 ## Crear un proyecto nuevo
 
+Con Composer 2 y PHP 8.2 o superior, desde cualquier computadora con acceso a internet:
+
+```bash
+composer create-project jb/skeleton mi_api
+cd mi_api
+php jb serve
+```
+
+El proyecto se prepara solo: crea el `.env` con un `JWT_SECRET` nuevo y las carpetas de almacenamiento.
+
+Alternativa desde el repositorio del framework (sin Packagist):
+
 ```bash
 php bin/jb new mi_api
 cd mi_api
 composer install
-```
-
-Luego inicia el servidor local:
-
-```bash
-php jb serve
 ```
 
 ## Generar un recurso
@@ -90,12 +96,6 @@ El comando make:scaffold crea el controlador, el modelo, la migración, el seede
 
 El directorio `examples/demo_api/` contiene una estructura de ejemplo ligera para referencia.
 
-Para crear un proyecto ejecutable, usa la CLI desde la raíz del framework:
-
-```bash
-php bin/jb new mi_api
-cd mi_api
-composer install
-```
+Para crear un proyecto ejecutable, usa `composer create-project jb/skeleton mi_api` (ver arriba). El código base de ese proyecto vive en [`skeleton/`](skeleton/).
 
 Licencia MIT.

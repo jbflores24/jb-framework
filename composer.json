@@ -40,10 +40,19 @@
             "/examples/",
             "/tests/",
             "/arbol.txt",
-            "/test.txt"
+            "/test.txt",
+            "/skeleton/"
         ]
     },
     "config": {
         "sort-packages": true
-    }
+    },
+    "keywords": [
+        "php",
+        "framework",
+        "rest",
+        "api",
+        "microframework"
+    ],
+    "homepage": "https://github.com/jbflores24/jb-framework"
 }

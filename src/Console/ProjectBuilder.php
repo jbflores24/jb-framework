@@ -46,14 +46,8 @@ class ProjectBuilder
         file_put_contents($target . '/composer.json', json_encode([
             'name' => $composerName,
             'type' => 'project',
-            'require' => ['php' => '>=8.2', 'jb/framework' => 'dev-main'],
+            'require' => ['php' => '>=8.2', 'jb/framework' => '^1.0'],
             'require-dev' => ['phpunit/phpunit' => '^11.0'],
-            'minimum-stability' => 'dev',
-            'prefer-stable' => true,
-            'repositories' => [[
-                'type' => 'vcs',
-                'url' => 'https://github.com/jbflores24/jb-framework.git',
-            ]],
             'autoload' => ['psr-4' => ['App\\' => 'app/']],
             'autoload-dev' => ['psr-4' => ['Tests\\' => 'tests/']],
             'scripts' => ['test' => 'phpunit'],

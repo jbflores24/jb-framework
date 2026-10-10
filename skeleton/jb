@@ -1,0 +1,18 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+chdir(__DIR__);
+
+$autoload = __DIR__ . '/vendor/autoload.php';
+$frameworkPath = __DIR__ . '/vendor/jb/framework';
+
+if (!is_file($autoload) || !is_dir($frameworkPath)) {
+    fwrite(STDERR, "Dependencias no instaladas. Ejecuta: composer install\n");
+    exit(1);
+}
+
+require $autoload;
+
+exit((new Jb\Console\ConsoleApplication(__DIR__, $frameworkPath))->run($argv));
