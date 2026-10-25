@@ -34,7 +34,11 @@ class RateLimiter
     }
 
     /**
-     * Check whether an identifier is within the allowed limit.
+     * Check whether an identifier is within the allowed limit and, if so, register the request.
+     *
+     * The window slides over the last N seconds (it does not reset on the calendar minute) and the
+     * read-decide-write sequence runs under an exclusive lock on the identifier's own file, so
+     * concurrent requests cannot both pass when only one slot is left.
      *
      * @param string $identifier IP or user_id.
      * @param int|null $maxRequests Custom limit (optional).
@@ -46,28 +50,26 @@ class RateLimiter
         $now = time();
         $windowStart = $now - $this->windowSizeSeconds;
 
-        $data = $this->loadData();
-        $requests = $data[$identifier] ?? [];
-
-        // Clean timestamps outside the current window.
-        $requests = array_values(array_filter($requests, static fn ($ts) => $ts > $windowStart));
+        $handle = $this->open($identifier, LOCK_EX);
+        $requests = $this->read($handle, $windowStart);
 
         $count = count($requests);
         $allowed = $count < $max;
         $remaining = max(0, $max - $count - 1);
-        $resetAt = $now + $this->windowSizeSeconds;
 
-        // Register the new request if allowed.
         if ($allowed) {
             $requests[] = $now;
-            $data[$identifier] = $requests;
-            $this->saveData($data);
+            $this->write($handle, $requests);
         }
+
+        $this->close($handle);
+        $this->prune($now);
 
         return [
             'allowed' => $allowed,
             'remaining' => $remaining,
-            'resetAt' => $resetAt,
+            // The identifier is free again when its oldest request leaves the window.
+            'resetAt' => ($requests[0] ?? $now) + $this->windowSizeSeconds,
             'current' => $count + 1,
             'limit' => $max,
         ];
@@ -83,14 +85,11 @@ class RateLimiter
     public function status(string $identifier, ?int $maxRequests = null): array
     {
         $max = $maxRequests ?? $this->maxRequestsPerWindow;
-        $now = time();
-        $windowStart = $now - $this->windowSizeSeconds;
+        $windowStart = time() - $this->windowSizeSeconds;
 
-        $data = $this->loadData();
-        $requests = $data[$identifier] ?? [];
-
-        $requests = array_values(array_filter($requests, static fn ($ts) => $ts > $windowStart));
-        $count = count($requests);
+        $handle = $this->open($identifier, LOCK_SH);
+        $count = count($this->read($handle, $windowStart));
+        $this->close($handle);
 
         return [
             'count' => $count,
@@ -104,9 +103,9 @@ class RateLimiter
      */
     public function reset(string $identifier): void
     {
-        $data = $this->loadData();
-        unset($data[$identifier]);
-        $this->saveData($data);
+        $handle = $this->open($identifier, LOCK_EX);
+        $this->write($handle, []);
+        $this->close($handle);
     }
 
     /**
@@ -117,7 +116,7 @@ class RateLimiter
         $files = glob($this->storageDir . '/rate_limit_*.json');
         if ($files !== false) {
             foreach ($files as $file) {
-                unlink($file);
+                @unlink($file);
             }
         }
     }
@@ -138,52 +137,81 @@ class RateLimiter
     }
 
     /**
-     * Load data from the current minute's JSON file.
+     * Open (creating if needed) the identifier's file and take the lock.
      *
-     * @return array<string, list<int>>
+     * @return resource
      */
-    private function loadData(): array
+    private function open(string $identifier, int $lock)
     {
-        $file = $this->getCurrentFile();
-
-        if (!file_exists($file)) {
-            return [];
+        $file = $this->storageDir . '/rate_limit_' . hash('sha256', $identifier) . '.json';
+        $handle = fopen($file, 'c+');
+        if ($handle === false) {
+            throw new \RuntimeException('No se pudo abrir el estado del limitador de peticiones.');
         }
+        flock($handle, $lock);
 
-        try {
-            $contents = file_get_contents($file);
-
-            return json_decode($contents === false ? '[]' : $contents, true, 512, JSON_THROW_ON_ERROR) ?? [];
-        } catch (JsonException) {
-            return [];
-        }
+        return $handle;
     }
 
     /**
-     * Save data to the current minute's JSON file.
-     *
-     * @param array<string, list<int>> $data
+     * @param resource $handle
+     * @return list<int> Timestamps still inside the window.
      */
-    private function saveData(array $data): void
+    private function read($handle, int $windowStart): array
     {
-        $file = $this->getCurrentFile();
+        rewind($handle);
+        $contents = stream_get_contents($handle);
 
         try {
-            $json = json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
-            file_put_contents($file, $json, LOCK_EX);
+            $data = json_decode($contents === false || $contents === '' ? '[]' : $contents, true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException) {
-            // Silently ignore JSON encoding errors.
+            return [];
         }
+
+        if (!is_array($data)) {
+            return [];
+        }
+
+        return array_values(array_filter($data, static fn ($ts) => is_int($ts) && $ts > $windowStart));
     }
 
     /**
-     * Resolve the storage file for the current minute.
+     * @param resource $handle
+     * @param list<int> $requests
      */
-    private function getCurrentFile(): string
+    private function write($handle, array $requests): void
     {
-        // Group by minute: rate_limit_2026_05_12_14_30.json
-        $timestamp = date('Y_m_d_H_i');
+        ftruncate($handle, 0);
+        rewind($handle);
+        fwrite($handle, json_encode($requests, JSON_THROW_ON_ERROR));
+        fflush($handle);
+    }
 
-        return $this->storageDir . '/rate_limit_' . $timestamp . '.json';
+    /**
+     * @param resource $handle
+     */
+    private function close($handle): void
+    {
+        flock($handle, LOCK_UN);
+        fclose($handle);
+    }
+
+    /**
+     * Occasionally remove state files whose last write is older than two windows (every entry in
+     * them has already expired). Also clears the per-minute files of earlier versions.
+     */
+    private function prune(int $now): void
+    {
+        if (random_int(1, 100) !== 1) {
+            return;
+        }
+
+        $files = glob($this->storageDir . '/rate_limit_*.json');
+        foreach ($files === false ? [] : $files as $file) {
+            $mtime = @filemtime($file);
+            if ($mtime !== false && $mtime < $now - 2 * $this->windowSizeSeconds) {
+                @unlink($file);
+            }
+        }
     }
 }
