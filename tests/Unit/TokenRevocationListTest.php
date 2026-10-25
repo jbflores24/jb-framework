@@ -19,7 +19,7 @@ class TokenRevocationListTest extends BaseTestCase
 
     protected function tearDown(): void
     {
-        array_map('unlink', glob($this->dir . '/*') ?: []);
+        @rmdir($this->dir . "/es_carpeta.json"); array_map('unlink', glob($this->dir . '/*') ?: []);
         @rmdir($this->dir);
     }
 
@@ -49,6 +49,15 @@ class TokenRevocationListTest extends BaseTestCase
         file_put_contents($this->dir . '/r.json', json_encode([hash('sha256', 'legado') => time() + 60]));
         $lista = new TokenRevocationList($this->dir . '/r.json');
         $this->assertTrue($lista->isRevoked('legado'));
+    }
+
+    public function test_si_no_puede_abrir_el_archivo_lanza_runtime_exception(): void
+    {
+        mkdir($this->dir . '/es_carpeta.json'); // la ruta es una carpeta: fopen falla
+        $lista = @new TokenRevocationList($this->dir . '/es_carpeta.json');
+
+        $this->expectException(\RuntimeException::class);
+        @$lista->revoke('t', time() + 60);
     }
 
     public function test_revocaciones_simultaneas_no_se_pierden(): void

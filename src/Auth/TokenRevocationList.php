@@ -181,7 +181,7 @@ class TokenRevocationList
     {
         $handle = fopen($this->storageFile, 'c+');
         if ($handle === false) {
-            throw new RuntimeException('No se pudo abrir la lista de tokens revocados.');
+            throw new \RuntimeException('No se pudo abrir la lista de tokens revocados.');
         }
 
         flock($handle, LOCK_EX);
