@@ -139,18 +139,34 @@ class RateLimiter
     /**
      * Open (creating if needed) the identifier's file and take the lock.
      *
+     * Once the lock is held, the path must still point to the file that was opened: the cleanup may
+     * have removed it in between, and writing to a removed file would split the state in two.
+     *
      * @return resource
      */
     private function open(string $identifier, int $lock)
     {
         $file = $this->storageDir . '/rate_limit_' . hash('sha256', $identifier) . '.json';
-        $handle = fopen($file, 'c+');
-        if ($handle === false) {
-            throw new \RuntimeException('No se pudo abrir el estado del limitador de peticiones.');
-        }
-        flock($handle, $lock);
 
-        return $handle;
+        for ($attempt = 0; $attempt < 5; $attempt++) {
+            $handle = fopen($file, 'c+');
+            if ($handle === false) {
+                throw new \RuntimeException('No se pudo abrir el estado del limitador de peticiones.');
+            }
+            flock($handle, $lock);
+
+            clearstatcache(true, $file);
+            $opened = fstat($handle);
+            $current = @stat($file);
+            if ($current !== false && $opened !== false && $opened['ino'] === $current['ino'] && $opened['dev'] === $current['dev']) {
+                return $handle;
+            }
+
+            flock($handle, LOCK_UN);
+            fclose($handle);
+        }
+
+        throw new \RuntimeException('No se pudo abrir el estado del limitador de peticiones.');
     }
 
     /**
@@ -209,9 +225,24 @@ class RateLimiter
         $files = glob($this->storageDir . '/rate_limit_*.json');
         foreach ($files === false ? [] : $files as $file) {
             $mtime = @filemtime($file);
-            if ($mtime !== false && $mtime < $now - 2 * $this->windowSizeSeconds) {
-                @unlink($file);
+            if ($mtime === false || $mtime >= $now - 2 * $this->windowSizeSeconds) {
+                continue;
             }
+
+            // Only remove a file nobody is using: take its lock without waiting and delete it while holding it.
+            $handle = @fopen($file, 'r+');
+            if ($handle === false) {
+                continue;
+            }
+            if (flock($handle, LOCK_EX | LOCK_NB)) {
+                clearstatcache(true, $file);
+                $mtime = @filemtime($file);
+                if ($mtime !== false && $mtime < $now - 2 * $this->windowSizeSeconds) {
+                    @unlink($file);
+                }
+                flock($handle, LOCK_UN);
+            }
+            fclose($handle);
         }
     }
 }

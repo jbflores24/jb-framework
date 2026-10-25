@@ -80,4 +80,39 @@ class RateLimiterTest extends BaseTestCase
 
         $this->assertSame(5, $pasaron);
     }
+
+    /**
+     * Una petición que está dentro de check() (con el candado tomado) no puede perder su archivo porque otra
+     * ejecute la limpieza: si se borrara, la siguiente petición crearía un archivo nuevo y habría dos estados
+     * paralelos para el mismo identificador.
+     */
+    public function test_la_limpieza_no_borra_el_archivo_de_una_peticion_en_curso(): void
+    {
+        $rl = new RateLimiter($this->dir, 1, 60);
+        $rl->check('z');
+        $archivo = glob($this->dir . '/rate_limit_*.json')[0];
+
+        $manejar = static function (object $obj, string $metodo, mixed ...$args): mixed {
+            $m = new \ReflectionMethod($obj, $metodo);
+
+            return $m->invoke($obj, ...$args);
+        };
+
+        // El archivo lleva inactivo más de dos ventanas: es candidato a limpieza.
+        touch($archivo, time() - 1000);
+        clearstatcache();
+
+        // Petición A: ya tomó el candado y está por escribir.
+        $asa = $manejar($rl, 'open', 'z', LOCK_EX);
+
+        // Limpieza lanzada por otra petición (prune borra con probabilidad 1/100: se repite hasta cubrirla).
+        for ($i = 0; $i < 3000; $i++) {
+            $manejar($rl, 'prune', time());
+        }
+
+        $sigue = is_file($archivo);
+        $manejar($rl, 'close', $asa);
+
+        $this->assertTrue($sigue, 'La limpieza borró el archivo mientras una petición lo tenía bloqueado.');
+    }
 }
