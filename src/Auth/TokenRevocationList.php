@@ -16,8 +16,12 @@ class TokenRevocationList
             mkdir($directory, 0777, true);
         }
 
+        // Crear sin truncar: otro proceso puede estar escribiendo en este mismo momento.
         if (!is_file($this->storageFile)) {
-            file_put_contents($this->storageFile, json_encode([]));
+            $handle = fopen($this->storageFile, 'c');
+            if ($handle !== false) {
+                fclose($handle);
+            }
         }
     }
 
@@ -26,15 +30,17 @@ class TokenRevocationList
      */
     public function revoke(string $token, int $expiresAt, array $metadata = []): void
     {
-        $items = $this->read();
-        $items[$this->hash($token)] = [
-            'expires_at' => $expiresAt,
-            'revoked_at' => time(),
-            'token_type' => $metadata['token_type'] ?? null,
-            'user_id' => $metadata['user_id'] ?? null,
-            'trace_id' => $metadata['trace_id'] ?? null,
-        ];
-        $this->write($items);
+        $this->mutate(function (array &$items) use ($token, $expiresAt, $metadata): bool {
+            $items[$this->hash($token)] = [
+                'expires_at' => $expiresAt,
+                'revoked_at' => time(),
+                'token_type' => $metadata['token_type'] ?? null,
+                'user_id' => $metadata['user_id'] ?? null,
+                'trace_id' => $metadata['trace_id'] ?? null,
+            ];
+
+            return true;
+        });
     }
 
     public function isRevoked(string $token): bool
@@ -47,8 +53,17 @@ class TokenRevocationList
         }
 
         if ($this->entryExpiresAt($items[$key]) <= time()) {
-            unset($items[$key]);
-            $this->write($items);
+            // Entrada vencida: se quita bajo el candado exclusivo, volviendo a leer por si cambió.
+            $this->mutate(function (array &$current) use ($key): bool {
+                if (isset($current[$key]) && $this->entryExpiresAt($current[$key]) <= time()) {
+                    unset($current[$key]);
+
+                    return true;
+                }
+
+                return false;
+            });
+
             return false;
         }
 
@@ -57,18 +72,22 @@ class TokenRevocationList
 
     public function cleanup(): int
     {
-        $items = $this->read();
-        $before = count($items);
+        $removed = 0;
+        $this->mutate(function (array &$items) use (&$removed): bool {
+            $before = count($items);
 
-        foreach ($items as $hash => $entry) {
-            if ($this->entryExpiresAt($entry) <= time()) {
-                unset($items[$hash]);
+            foreach ($items as $hash => $entry) {
+                if ($this->entryExpiresAt($entry) <= time()) {
+                    unset($items[$hash]);
+                }
             }
-        }
 
-        $this->write($items);
+            $removed = $before - count($items);
 
-        return $before - count($items);
+            return $removed > 0;
+        });
+
+        return $removed;
     }
 
     /**
@@ -138,7 +157,58 @@ class TokenRevocationList
      */
     private function read(): array
     {
-        $raw = file_get_contents($this->storageFile);
+        $handle = fopen($this->storageFile, 'c+');
+        if ($handle === false) {
+            return [];
+        }
+
+        flock($handle, LOCK_SH);
+        $items = $this->decode($handle);
+        flock($handle, LOCK_UN);
+        fclose($handle);
+
+        return $items;
+    }
+
+    /**
+     * Read, change and write the list under one exclusive lock, so concurrent revocations cannot
+     * overwrite each other. The callback receives the items by reference and returns whether it
+     * changed them.
+     *
+     * @param callable(array<string, mixed>): bool $change
+     */
+    private function mutate(callable $change): void
+    {
+        $handle = fopen($this->storageFile, 'c+');
+        if ($handle === false) {
+            throw new RuntimeException('No se pudo abrir la lista de tokens revocados.');
+        }
+
+        flock($handle, LOCK_EX);
+
+        try {
+            $items = $this->decode($handle);
+
+            if ($change($items)) {
+                ftruncate($handle, 0);
+                rewind($handle);
+                fwrite($handle, json_encode($items, JSON_UNESCAPED_UNICODE));
+                fflush($handle);
+            }
+        } finally {
+            flock($handle, LOCK_UN);
+            fclose($handle);
+        }
+    }
+
+    /**
+     * @param resource $handle
+     * @return array<string, mixed>
+     */
+    private function decode($handle): array
+    {
+        rewind($handle);
+        $raw = stream_get_contents($handle);
         if ($raw === false || $raw === '') {
             return [];
         }
@@ -146,14 +216,6 @@ class TokenRevocationList
         $data = json_decode($raw, true);
 
         return is_array($data) ? $data : [];
-    }
-
-    /**
-     * @param array<string, int> $items
-     */
-    private function write(array $items): void
-    {
-        file_put_contents($this->storageFile, json_encode($items, JSON_UNESCAPED_UNICODE), LOCK_EX);
     }
 
     private function entryExpiresAt(mixed $entry): int
